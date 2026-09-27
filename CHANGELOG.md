@@ -1,5 +1,25 @@
 # Changelog
 
+## [r1.10-376] - 2026-09-27
+
+### Tweaks
+
+- Mana Mirror can now be used as a Bauble
+    - This is configurable to instead register a Mirror Band or disable the feature altogether
+    - In either case Mana Mirror will still be usable from the inventory
+- Adjusted the mechanics of Ring of Chordata to make it feel less slippery
+- Right-clicking to equip Baubles of types having many slots (rings or types configured by the modpack to have multiple slots) will now prioritize free slots if possible
+
+### Config
+
+- Added an option to disallow certain mobs to be targeted by Heisei Dream (thank you Windanesz!)
+- Added a number of config options to various baubles
+
+### Fixes
+
+- Bauble Case and Flower Bag will no longer void items (thank you Aedial!)
+- Using Ring of Chordata with Aqua Acrobatics installed will no longer make the player unreasonably fast
+
 ## [r1.10-375] - 2026-08-22
 
 ### Tweaks
