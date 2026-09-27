@@ -29,6 +29,7 @@ public final class LibItemNames {
 	public static final String DIRT_ROD = "dirtRod";
 	public static final String TERRAFORM_ROD = "terraformRod";
 	public static final String MANA_MIRROR = "manaMirror";
+	public static final String MANA_MIRROR_RING = "manaMirrorRing";
 	public static final String MANASTEEL_HELM = "manasteelHelm";
 	public static final String MANASTEEL_CHEST = "manasteelChest";
 	public static final String MANASTEEL_LEGS = "manasteelLegs";

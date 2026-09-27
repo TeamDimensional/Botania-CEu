@@ -557,6 +557,8 @@ botania.config.baubles.reachRing.distance.tooltip=Bonus distance for Ring of Far
 botania.config.baubles.reachRing.distance=Ring of Far Reach Distance
 botania.config.baubles.odinRing.maxHPBoost.tooltip=Maximum health boost from having Ring of Odin
 botania.config.baubles.odinRing.maxHPBoost=Ring of Odin Max HP Boost
+botania.config.baubles.manaMirror.bauble.tooltip=0: Mana Mirror won't be usable as a bauble. 1: A ring version of Mana Mirror will be registered. 2: Mana Mirror goes in the amulet slot.
+botania.config.baubles.manaMirror.bauble=Mana Mirror Bauble
 
 # VERSION CHECKING
 botania.versioning.flavour0=NANI SORE!? BOTANIA IS OUTDATED!?
@@ -1587,6 +1589,7 @@ item.botania:livingwoodTwig.name=Livingwood Twig
 item.botania:dirtRod.name=Rod of the Lands
 item.botania:terraformRod.name=Rod of the Terra Firma
 item.botania:manaMirror.name=Mana Mirror
+item.botania:manaMirrorRing.name=Mirror Band
 item.botania:manasteelHelm.name=Manasteel Helmet
 item.botania:manasteelChest.name=Manasteel Chestplate
 item.botania:manasteelLegs.name=Manasteel Leggings
@@ -2393,6 +2396,12 @@ botania.entry.manaMirror=Mana Mirror
 botania.tagline.manaMirror=Remote Portable Mana Access
 botania.page.manaMirror0=A &1Mana Mirror&0 is an alternative to &4Mana&0 containing items such as a &1Mana Tablet&0. It can be bound to a &1Mana Pool&0 in the world and items will pull out of the pool itself when needing &4Mana&0.<br>To bind a mirror to a pool, one would simply &4shift right-click&0 a pool with the mirror. The mirror can't put mana in or take mana out of pools in any other way.
 botania.page.manaMirror1=Mirror mirror on the wall...
+
+# -- MANA MIRROR RING
+botania.entry.manaMirrorRing=Mirror Band
+botania.tagline.manaMirrorRing=The best of both worlds
+botania.page.manaMirrorRing0=A &1Mirror Band&0 works the same way as a Mana Mirror, but it also can be worn in the ring slot.
+botania.page.manaMirrorRing1=How does it even fit?
 
 # -- MANA DETECTOR
 botania.entry.manaDetector=Mana Detector

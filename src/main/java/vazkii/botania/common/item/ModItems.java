@@ -10,6 +10,7 @@
  */
 package vazkii.botania.common.item;
 
+import baubles.api.BaubleType;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -19,6 +20,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
 import vazkii.botania.api.BotaniaAPI;
+import vazkii.botania.common.core.handler.ConfigHandler;
 import vazkii.botania.common.item.brew.ItemBrewFlask;
 import vazkii.botania.common.item.brew.ItemBrewVial;
 import vazkii.botania.common.item.brew.ItemIncenseStick;
@@ -92,6 +94,7 @@ import vazkii.botania.common.item.rod.ItemSmeltRod;
 import vazkii.botania.common.item.rod.ItemTerraformRod;
 import vazkii.botania.common.item.rod.ItemTornadoRod;
 import vazkii.botania.common.item.rod.ItemWaterRod;
+import vazkii.botania.common.lib.LibItemNames;
 import vazkii.botania.common.lib.LibMisc;
 import vazkii.botania.common.lib.LibOreDict;
 
@@ -113,7 +116,8 @@ public final class ModItems {
 	public static final Item dirtRod = new ItemDirtRod();
 	public static final Item terraformRod = new ItemTerraformRod();
 	public static final Item grassHorn = new ItemGrassHorn();
-	public static final Item manaMirror = new ItemManaMirror();
+	public static final ItemManaMirror manaMirror = new ItemManaMirror(LibItemNames.MANA_MIRROR, BaubleType.AMULET);
+	public static final ItemManaMirror manaMirrorRing = new ItemManaMirror(LibItemNames.MANA_MIRROR_RING, BaubleType.RING);
 	public static final Item manasteelHelm = new ItemManasteelHelm();
 	public static final Item manasteelHelmRevealing = new ItemManasteelHelmRevealing();
 	public static final Item manasteelChest = new ItemManasteelChest();
@@ -404,6 +408,13 @@ public final class ModItems {
 		r.register(thirdEye);
 		r.register(astrolabe);
 		r.register(goddessCharm);
+
+		if (ConfigHandler.baubles.manaMirrorBauble == 2) {
+			manaMirror.supportsBauble = true;
+		} else if (ConfigHandler.baubles.manaMirrorBauble == 1) {
+			manaMirrorRing.supportsBauble = true;
+			r.register(manaMirrorRing);
+		}
 
 		registerOreDictionary();
 	}

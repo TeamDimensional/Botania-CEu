@@ -10,6 +10,9 @@
  */
 package vazkii.botania.common.lexicon;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -53,9 +56,6 @@ import vazkii.botania.common.lib.LibBlockNames;
 import vazkii.botania.common.lib.LibLexicon;
 import vazkii.botania.common.lib.LibMisc;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public final class LexiconData {
 
 	public static LexiconEntry welcome;
@@ -80,6 +80,7 @@ public final class LexiconData {
 	public static LexiconEntry manaVoid;
 	public static LexiconEntry manaTablet;
 	public static LexiconEntry manaMirror;
+	public static LexiconEntry manaMirrorRing;
 	public static LexiconEntry manaDetector;
 	public static LexiconEntry redstoneSpreader;
 	public static LexiconEntry manastar;
@@ -485,6 +486,11 @@ public final class LexiconData {
 
 		manaMirror = new BasicLexiconEntry(LibLexicon.MANA_MIRROR, categoryMana);
 		manaMirror.setLexiconPages(new PageText("0"), new PageCraftingRecipe("1", ModCraftingRecipes.recipeManaMirror));
+
+		if (ConfigHandler.baubles.manaMirrorBauble == 1) {
+			manaMirrorRing = new BasicLexiconEntry(LibLexicon.MANA_MIRROR_RING, categoryMana);
+			manaMirrorRing.setLexiconPages(new PageText("0"), new PageCraftingRecipe("1", ModCraftingRecipes.recipeManaMirrorRing));
+		}
 
 		manaDetector = new BasicLexiconEntry(LibLexicon.MANA_DETECTOR, categoryMana);
 		manaDetector.setLexiconPages(new PageText("0"),

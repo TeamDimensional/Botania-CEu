@@ -11,17 +11,22 @@
 package vazkii.botania.common.item;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import vazkii.botania.api.mana.IManaItem;
 import vazkii.botania.api.mana.IManaPool;
@@ -30,11 +35,15 @@ import vazkii.botania.api.wand.ICoordBoundItem;
 import vazkii.botania.common.block.tile.mana.TilePool;
 import vazkii.botania.common.core.handler.ModSounds;
 import vazkii.botania.common.core.helper.ItemNBTHelper;
-import vazkii.botania.common.lib.LibItemNames;
+import vazkii.botania.common.item.equipment.bauble.ItemBaubleBase;
 
 import javax.annotation.Nonnull;
 
-public class ItemManaMirror extends ItemMod implements IManaItem, ICoordBoundItem, IManaTooltipDisplay {
+import baubles.api.BaubleType;
+import baubles.api.IBauble;
+import baubles.api.cap.BaublesCapabilities;
+
+public class ItemManaMirror extends ItemBaubleBase implements IManaItem, ICoordBoundItem, IManaTooltipDisplay {
 
 	private static final String TAG_MANA = "mana";
 	private static final String TAG_MANA_BACKLOG = "manaBacklog";
@@ -45,12 +54,46 @@ public class ItemManaMirror extends ItemMod implements IManaItem, ICoordBoundIte
 	private static final String TAG_DIM = "dim";
 
 	private static final DummyPool fallbackPool = new DummyPool();
+	public final BaubleType baubleType;
+	public boolean supportsBauble = false;
 
-	public ItemManaMirror() {
-		super(LibItemNames.MANA_MIRROR);
+	public ItemManaMirror(String name, BaubleType baubleType) {
+		super(name);
 		setMaxStackSize(1);
 		setMaxDamage(1000);
 		setNoRepair();
+		this.baubleType = baubleType;
+	}
+
+	public ItemManaMirror() {
+		this("manamirror", BaubleType.AMULET);
+	}
+
+	@Override
+	public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt) {
+		return new ICapabilityProvider() {
+
+			@Override
+			public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+				return capability.equals(BaublesCapabilities.CAPABILITY_ITEM_BAUBLE) && supportsBauble;
+			}
+
+			@SuppressWarnings("unchecked")
+			@Override
+			public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+				if (!capability.equals(BaublesCapabilities.CAPABILITY_ITEM_BAUBLE) || !supportsBauble) {
+                    return null;
+                }
+
+                return (T) new IBauble() {
+					@Override
+					public BaubleType getBaubleType(ItemStack arg0) {
+						return baubleType;
+					}
+                };
+			}
+            
+        };
 	}
 
 	@Override
@@ -89,6 +132,14 @@ public class ItemManaMirror extends ItemMod implements IManaItem, ICoordBoundIte
 		}
 
 		return EnumActionResult.PASS;
+	}
+
+	@Nonnull
+	@Override
+	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand) {
+		// Remove the default bauble RMB
+		ItemStack stack = player.getHeldItem(hand);
+		return ActionResult.newResult(EnumActionResult.PASS, stack);
 	}
 
 	/*public int getMana(ItemStack stack) {
@@ -247,6 +298,16 @@ public class ItemManaMirror extends ItemMod implements IManaItem, ICoordBoundIte
 	@Override
 	public float getManaFractionForDisplay(ItemStack stack) {
 		return (float) getMana(stack) / (float) getMaxMana(stack);
+	}
+
+	@Override
+	public boolean canEquip(ItemStack stack, EntityLivingBase player) {
+		return supportsBauble;
+	}
+
+	@Override
+	protected boolean shouldAddBaublesTooltip(ItemStack itemStack, World world) {
+		return supportsBauble;
 	}
 
 }

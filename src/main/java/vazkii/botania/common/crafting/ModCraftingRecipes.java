@@ -105,6 +105,7 @@ public final class ModCraftingRecipes {
 	public static ResourceLocation recipeTerraformRod;
 	public static ResourceLocation recipeRedstoneSpreader;
 	public static ResourceLocation recipeManaMirror;
+	public static ResourceLocation recipeManaMirrorRing;
 	public static ResourceLocation recipeManasteelHelm;
 	public static ResourceLocation recipeManasteelChest;
 	public static ResourceLocation recipeManasteelLegs;
@@ -477,6 +478,9 @@ public final class ModCraftingRecipes {
 		recipeManaVoid = ModBlocks.manaVoid.getRegistryName();
 		recipeManaTablet = ModItems.manaTablet.getRegistryName();
 		recipeManaMirror = ModItems.manaMirror.getRegistryName();
+		if (ConfigHandler.baubles.manaMirrorBauble == 1) {
+			recipeManaMirrorRing = ModItems.manaMirrorRing.getRegistryName();
+		}
 		recipeManaDetector = ModBlocks.manaDetector.getRegistryName();
 		recipeRedstoneSpreader = path("spreader_1");
 		recipeDreamwoodSpreader = path("spreader_2");

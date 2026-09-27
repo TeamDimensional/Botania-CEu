@@ -1,0 +1,19 @@
+{
+  "result": {
+    "item": "botania:manamirrorring"
+  },
+  "pattern": [
+    "LM ",
+    "M M",
+    " M "
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "L": {
+      "item": "botania:manamirror"
+    },
+    "M": {
+      "item": "#INGOTMANASTEEL"
+    }
+  }
+}

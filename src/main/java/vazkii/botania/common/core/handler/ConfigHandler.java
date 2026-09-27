@@ -676,6 +676,12 @@ public final class ConfigHandler {
 		@Config.Comment("Maximum health boost from having Ring of Odin")
 		@Config.RangeInt(min=0, max=200)
 		public int odinRingMaxHPBoost = 20;
+
+		@Config.Name("manaMirror.bauble")
+		@Config.LangKey("botania.config.baubles.manaMirror.bauble")
+		@Config.Comment("0 = Mana Mirror won't be usable as a bauble. 1 = A ring version of Mana Mirror will be registered. 2 = Mana Mirror goes in the amulet slot.")
+		@Config.RangeInt(min=0, max=2)
+		public int manaMirrorBauble = 2;
 	}
 
     @Mod.EventBusSubscriber(modid = LibMisc.MOD_ID)
