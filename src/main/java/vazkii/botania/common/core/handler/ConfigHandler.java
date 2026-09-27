@@ -599,6 +599,12 @@ public final class ConfigHandler {
 		@Config.RangeDouble(min=0.005, max=0.2)
 		public double waterRingImpulse = 0.06;
 
+		@Config.Name("waterRing.verticalVelocity")
+		@Config.LangKey("botania.config.baubles.waterRing.verticalVelocity")
+		@Config.Comment("Vertical velocity multiplier when wearing Ring of Chordata. This will be applied every tick, so the effect is exponential.")
+		@Config.RangeDouble(min=1.0, max=1.25)
+		public double waterRingVerticalVelocity = 1.15;
+
 		@Config.Name("holyCloak.cooldown")
 		@Config.LangKey("botania.config.baubles.holyCloak.cooldown")
 		@Config.Comment("How long should Cloak of Virtue's cooldown be, in ticks?")
