@@ -10,7 +10,6 @@
  */
 package vazkii.botania.common.item;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
@@ -33,18 +32,15 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import vazkii.botania.common.Botania;
 import vazkii.botania.common.block.ModBlocks;
-import vazkii.botania.common.core.helper.ItemNBTHelper;
 import vazkii.botania.common.lib.LibGuiIDs;
 import vazkii.botania.common.lib.LibItemNames;
 
@@ -64,22 +60,18 @@ public class ItemFlowerBag extends ItemMod {
 	@Nonnull
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound oldCapNbt) {
-		return new InvProvider();
+		return new InvProvider(stack);
 	}
 
 	private static class InvProvider implements ICapabilitySerializable<NBTBase> {
 
-		private final IItemHandler inv = new ItemStackHandler(16) {
-			@Nonnull
-			@Override
-			public ItemStack insertItem(int slot, @Nonnull ItemStack toInsert, boolean simulate) {
-				if(!toInsert.isEmpty()
-						&& toInsert.getItem() == Item.getItemFromBlock(ModBlocks.flower)
-						&& toInsert.getItemDamage() == slot)
-					return super.insertItem(slot, toInsert, simulate);
-				else return toInsert;
-			}
-		};
+		private final ItemStack stack;
+		private final IItemHandlerModifiable inv;
+
+		private InvProvider(ItemStack stack) {
+			this.stack = stack;
+			inv = new ItemBackedInventory.ItemHandler(() -> getInventory(stack));
+		}
 
 		@Override
 		public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
@@ -95,23 +87,27 @@ public class ItemFlowerBag extends ItemMod {
 
 		@Override
 		public NBTBase serializeNBT() {
-			return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.writeNBT(inv, null);
+			// Clear legacy capability data after moving it into the item tag
+			return new NBTTagList();
 		}
 
 		@Override
 		public void deserializeNBT(NBTBase nbt) {
-			CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.readNBT(inv, null, nbt);
+			if(!ItemBackedInventory.hasItems(stack, TAG_ITEMS)) {
+				CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.readNBT(inv, null, nbt);
+			}
 		}
 	}
 
-	@Override
-	public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-		NBTTagList oldData = ItemNBTHelper.getList(stack, TAG_ITEMS, Constants.NBT.TAG_COMPOUND, true);
-		if (oldData != null) {
-			IItemHandler newInv = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-			CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.readNBT(newInv, null, oldData);
-			ItemNBTHelper.removeEntry(stack, TAG_ITEMS);
-		}
+	public static ItemBackedInventory getInventory(ItemStack stack) {
+		return new ItemBackedInventory(stack, 16, TAG_ITEMS) {
+			@Override
+			public boolean isItemValidForSlot(int slot, @Nonnull ItemStack toInsert) {
+				return !toInsert.isEmpty()
+						&& toInsert.getItem() == Item.getItemFromBlock(ModBlocks.flower)
+						&& toInsert.getItemDamage() == slot;
+			}
+		};
 	}
 
 	@SubscribeEvent
