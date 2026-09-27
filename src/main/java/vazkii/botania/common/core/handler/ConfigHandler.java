@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.IntStream;
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
@@ -379,6 +380,11 @@ public final class ConfigHandler {
 	@Config.Comment("Should Mana Enchanter be able to add enchantments to items that are already enchanted?")
 	public static boolean opManaEnchanter = false;
 
+	@Config.Name("ceu.heiseiDream.immuneEntities")
+	@Config.LangKey("botania.config.heiseiDreamImmuneEntities")
+	@Config.Comment("Entities immune to Heisei Dream. Syntax is modid:entity_name.")
+	public static String[] heiseiDreamImmuneEntities = {};
+
 	@Config.Ignore
 	public static Set<String> runicAltarCatalystsSet = new HashSet<>();
 
@@ -387,6 +393,9 @@ public final class ConfigHandler {
 
 	@Config.Ignore
 	public static Set<String> petalApothecaryCatalystsSet = new HashSet<>();
+
+	@Config.Ignore
+	public static Set<ResourceLocation> heiseiDreamImmuneEntitiesSet = new HashSet<>();
 
 	@Config.Ignore
 	private static File configFolder;
@@ -400,6 +409,16 @@ public final class ConfigHandler {
 	public static boolean enableFancySkyboxInNormalWorlds = false;
 	@Config.Ignore
 	public static boolean useVanillaParticleLimiter = true;
+
+	public static void loadHeiseiDreamImmuneEntities() {
+		heiseiDreamImmuneEntitiesSet.clear();
+		for(String entry : heiseiDreamImmuneEntities) {
+			String entityId = entry.trim();
+			if(!entityId.isEmpty()) {
+				heiseiDreamImmuneEntitiesSet.add(new ResourceLocation(entityId));
+			}
+		}
+	}
 
 	@Config.LangKey("botania.config.generatingFlowers")
 	@Config.Comment("Configure generation values for all the flowers. Note! You should not edit this unless you are very experienced with Botania, since it can change the brittle balance of the mod.")
@@ -592,6 +611,7 @@ public final class ConfigHandler {
 		runicAltarRetainedItemsSet.addAll(InventoryHelper.expandMetaInStringifiedStacks(runicAltarRetainedItems));
 		petalApothecaryCatalystsSet.clear();
 		petalApothecaryCatalystsSet.addAll(InventoryHelper.expandMetaInStringifiedStacks(petalApothecaryCatalysts));
+		loadHeiseiDreamImmuneEntities();
 
 		SheddingHandler.loadFromConfig(new Configuration(new File(configFolder, "botaniashedding.cfg")));
 	}

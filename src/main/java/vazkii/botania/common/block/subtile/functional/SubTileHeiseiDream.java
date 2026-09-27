@@ -12,12 +12,10 @@ package vazkii.botania.common.block.subtile.functional;
 
 import com.google.common.base.Predicates;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.ai.EntityAIAttackMelee;
-import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAITasks.EntityAITaskEntry;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -25,10 +23,10 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import vazkii.botania.api.lexicon.LexiconEntry;
 import vazkii.botania.api.subtile.RadiusDescriptor;
 import vazkii.botania.api.subtile.SubTileFunctional;
+import vazkii.botania.common.core.handler.ConfigHandler;
 import vazkii.botania.common.lexicon.LexiconData;
 import vazkii.botania.common.lib.LibObfuscation;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SubTileHeiseiDream extends SubTileFunctional {
@@ -61,6 +59,10 @@ public class SubTileHeiseiDream extends SubTileFunctional {
 	}
 
 	public static boolean brainwashEntity(EntityLiving entity, List<IMob> mobs) {
+		if(isImmune(entity)) {
+			return false;
+		}
+
 		EntityLivingBase target = entity.getAttackTarget();
 		boolean did = false;
 
@@ -89,6 +91,10 @@ public class SubTileHeiseiDream extends SubTileFunctional {
 		}
 
 		return did;
+	}
+
+	private static boolean isImmune(EntityLiving entity) {
+		return ConfigHandler.heiseiDreamImmuneEntitiesSet.contains(EntityList.getKey(entity));
 	}
 
 	@Override
