@@ -105,7 +105,7 @@ public class ItemOdinRing extends ItemRelicBauble {
 		if(stack.isEmpty()) // workaround for Azanor/Baubles#156
 			return;
 		
-		attributes.put(SharedMonsterAttributes.MAX_HEALTH.getName(), new AttributeModifier(getBaubleUUID(stack), "Odin Ring", 20, 0).setSaved(false));
+		attributes.put(SharedMonsterAttributes.MAX_HEALTH.getName(), new AttributeModifier(getBaubleUUID(stack), "Odin Ring", ConfigHandler.baubles.odinRingMaxHPBoost, 0).setSaved(false));
 	}
 
 	@Override

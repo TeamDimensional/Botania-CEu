@@ -30,6 +30,7 @@ import vazkii.botania.api.item.IBaubleRender;
 import vazkii.botania.client.lib.LibResources;
 import vazkii.botania.client.model.ModelCloak;
 import vazkii.botania.common.Botania;
+import vazkii.botania.common.core.handler.ConfigHandler;
 import vazkii.botania.common.core.handler.ModSounds;
 import vazkii.botania.common.core.helper.ItemNBTHelper;
 import vazkii.botania.common.lib.LibItemNames;
@@ -97,7 +98,7 @@ public class ItemHolyCloak extends ItemBauble implements IBaubleRender {
 	}
 
 	public int getCooldownTime(ItemStack stack) {
-		return 200;
+		return ConfigHandler.baubles.holyCloakCooldown;
 	}
 
 	@Override

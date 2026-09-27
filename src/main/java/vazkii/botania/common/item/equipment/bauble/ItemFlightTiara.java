@@ -74,10 +74,9 @@ public class ItemFlightTiara extends ItemBauble implements IManaUsingItem, IBaub
 	private static final String TAG_DASH_COOLDOWN = "dashCooldown";
 	private static final String TAG_IS_SPRINTING = "isSprinting";
 
-	public static final List<String> playersWithFlight = new ArrayList();
+	public static final List<String> playersWithFlight = new ArrayList<>();
 	private static final int COST = 35;
 	private static final int COST_OVERKILL = COST * 3;
-	private static final int MAX_FLY_TIME = 1200;
 
 	private static final int SUBTYPES = 8;
 	public static final int WING_TYPES = 9;
@@ -133,14 +132,14 @@ public class ItemFlightTiara extends ItemBauble implements IManaUsingItem, IBaub
 			if(isSprinting != wasSprting)
 				ItemNBTHelper.setBoolean(stack, TAG_IS_SPRINTING, isSprinting);
 
-			int time = ItemNBTHelper.getInt(stack, TAG_TIME_LEFT, MAX_FLY_TIME);
+			int time = ItemNBTHelper.getInt(stack, TAG_TIME_LEFT, ConfigHandler.baubles.flightTiaraFlightDuration);
 			int newTime = time;
 			Vector3 look = new Vector3(p.getLookVec()).multiply(1, 0, 1).normalize();
 
 			if(flying) {
 				if(time > 0 && !ItemNBTHelper.getBoolean(stack, TAG_INFINITE_FLIGHT, false))
 					newTime--;
-				final int maxCd = 80;
+				final int maxCd = ConfigHandler.baubles.flightTiaraDashCooldown;
 				int cooldown = ItemNBTHelper.getInt(stack, TAG_DASH_COOLDOWN, 0);
 				if(!wasSprting && isSprinting && cooldown == 0) {
 					p.motionX += look.x;
@@ -158,7 +157,8 @@ public class ItemFlightTiara extends ItemBauble implements IManaUsingItem, IBaub
 				}
 			} else if(!flying) {
 				boolean doGlide = player.isSneaking() && !player.onGround && player.fallDistance >= 2F;
-				if(time < MAX_FLY_TIME && player.ticksExisted % (doGlide ? 6 : 2) == 0)
+				int ticksPerRecovery = doGlide ? ConfigHandler.baubles.flightTiaraGlideRecovery : ConfigHandler.baubles.flightTiaraNormalRecovery;
+				if(time < ConfigHandler.baubles.flightTiaraFlightDuration && player.ticksExisted % ticksPerRecovery == 0)
 					newTime++;
 
 				if(doGlide) {
@@ -181,7 +181,7 @@ public class ItemFlightTiara extends ItemBauble implements IManaUsingItem, IBaub
 		if(event.getEntityLiving() instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) event.getEntityLiving();
 			ItemStack tiara = BaublesApi.getBaublesHandler(player).getStackInSlot(4);
-			int left = ItemNBTHelper.getInt(tiara, TAG_TIME_LEFT, MAX_FLY_TIME);
+			int left = ItemNBTHelper.getInt(tiara, TAG_TIME_LEFT, ConfigHandler.baubles.flightTiaraFlightDuration);
 
 			if(playersWithFlight.contains(playerStr(player))) {
 				if(shouldPlayerHaveFlight(player)) {
@@ -280,9 +280,9 @@ public class ItemFlightTiara extends ItemBauble implements IManaUsingItem, IBaub
 	private boolean shouldPlayerHaveFlight(EntityPlayer player) {
 		ItemStack armor = BaublesApi.getBaublesHandler(player).getStackInSlot(4);
 		if(!armor.isEmpty() && armor.getItem() == this) {
-			int left = ItemNBTHelper.getInt(armor, TAG_TIME_LEFT, MAX_FLY_TIME);
+			int left = ItemNBTHelper.getInt(armor, TAG_TIME_LEFT, ConfigHandler.baubles.flightTiaraFlightDuration);
 			boolean flying = ItemNBTHelper.getBoolean(armor, TAG_FLYING, false);
-			return (left > (flying ? 0 : MAX_FLY_TIME / 10) || player.inventory.hasItemStack(new ItemStack(ModItems.flugelEye))) && ManaItemHandler.requestManaExact(armor, player, getCost(armor, left), false);
+			return (left > (flying ? 0 : ConfigHandler.baubles.flightTiaraFlightDuration / 10) || player.inventory.hasItemStack(new ItemStack(ModItems.flugelEye))) && ManaItemHandler.requestManaExact(armor, player, getCost(armor, left), false);
 		}
 
 		return false;
@@ -481,9 +481,9 @@ public class ItemFlightTiara extends ItemBauble implements IManaUsingItem, IBaub
 		if(player.isInsideOfMaterial(Material.WATER))
 			y = resolution.getScaledHeight() - ConfigHandler.flightBarBreathHeight;
 
-		int left = ItemNBTHelper.getInt(stack, TAG_TIME_LEFT, MAX_FLY_TIME);
+		int left = ItemNBTHelper.getInt(stack, TAG_TIME_LEFT, ConfigHandler.baubles.flightTiaraFlightDuration);
 
-		int segTime = MAX_FLY_TIME / 10;
+		int segTime = ConfigHandler.baubles.flightTiaraFlightDuration / 10;
 		int segs = left / segTime + 1;
 		int last = left % segTime;
 

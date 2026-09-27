@@ -15,6 +15,7 @@ import com.google.common.collect.Multimap;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import vazkii.botania.common.core.handler.ConfigHandler;
 import vazkii.botania.common.lib.LibItemNames;
 
 public class ItemReachRing extends ItemBaubleModifier {
@@ -25,7 +26,7 @@ public class ItemReachRing extends ItemBaubleModifier {
 
 	@Override
 	void fillModifiers(Multimap<String, AttributeModifier> attributes, ItemStack stack) {
-		attributes.put(EntityPlayer.REACH_DISTANCE.getName(), new AttributeModifier(getBaubleUUID(stack), "Reach Ring", 3.5, 0).setSaved(false));
+		attributes.put(EntityPlayer.REACH_DISTANCE.getName(), new AttributeModifier(getBaubleUUID(stack), "Reach Ring", ConfigHandler.baubles.reachRingDistance, 0).setSaved(false));
 	}
 
 	@Override

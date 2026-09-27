@@ -25,6 +25,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import vazkii.botania.client.lib.LibResources;
 import vazkii.botania.common.Botania;
+import vazkii.botania.common.core.handler.ConfigHandler;
 import vazkii.botania.common.core.handler.ModSounds;
 import vazkii.botania.common.lib.LibItemNames;
 
@@ -39,6 +40,7 @@ public class ItemUnholyCloak extends ItemHolyCloak {
 		super(LibItemNames.UNHOLY_CLOAK);
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public boolean effectOnDamage(LivingHurtEvent event, EntityPlayer player, ItemStack stack) {
 		if(!event.getSource().isUnblockable()) {
@@ -74,6 +76,10 @@ public class ItemUnholyCloak extends ItemHolyCloak {
 	@SideOnly(Side.CLIENT)
 	ResourceLocation getCloakGlowTexture() {
 		return textureGlow;
+	}
+
+	public int getCooldownTime(ItemStack stack) {
+		return ConfigHandler.baubles.unholyCloakCooldown;
 	}
 
 }

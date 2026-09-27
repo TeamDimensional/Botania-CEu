@@ -47,7 +47,7 @@ public class ItemMagnetRing extends ItemBauble {
 	private final int range;
 
 	public ItemMagnetRing() {
-		this(LibItemNames.MAGNET_RING, 6);
+		this(LibItemNames.MAGNET_RING, ConfigHandler.baubles.magnetRingDistance);
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 

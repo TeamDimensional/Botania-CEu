@@ -30,8 +30,6 @@ import vazkii.botania.common.lib.LibItemNames;
 import vazkii.botania.common.network.PacketHandler;
 import vazkii.botania.common.network.PacketJump;
 
-import java.util.UUID;
-
 public class ItemCloudPendant extends CloudPendantShim implements IBaubleRender {
 
 	private static int timesJumped;
@@ -55,7 +53,6 @@ public class ItemCloudPendant extends CloudPendantShim implements IBaubleRender 
 	public void clientWornTick(ItemStack stack, EntityLivingBase player) {
 		if(player instanceof EntityPlayerSP && player == Minecraft.getMinecraft().player) {
 			EntityPlayerSP playerSp = (EntityPlayerSP) player;
-			UUID uuid = playerSp.getUniqueID();
 
 			if(playerSp.onGround)
 				timesJumped = 0;

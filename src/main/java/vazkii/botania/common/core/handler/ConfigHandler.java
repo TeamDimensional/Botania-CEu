@@ -595,9 +595,81 @@ public final class ConfigHandler {
 	public static class Baubles {
 		@Config.Name("waterRing.impulse")
 		@Config.LangKey("botania.config.baubles.waterRing.impulse")
-		@Config.Comment("How much impulse should Ring of Chordata grant to players in water?")
+		@Config.Comment("Impulse boost from Ring of Chordata. 0.02 doubles the speed, 0.04 triples, etc.")
 		@Config.RangeDouble(min=0.005, max=0.2)
 		public double waterRingImpulse = 0.06;
+
+		@Config.Name("holyCloak.cooldown")
+		@Config.LangKey("botania.config.baubles.holyCloak.cooldown")
+		@Config.Comment("How long should Cloak of Virtue's cooldown be, in ticks?")
+		@Config.RangeInt(min=5, max=1200)
+		public int holyCloakCooldown = 200;
+
+		@Config.Name("balanceCloak.cooldown")
+		@Config.LangKey("botania.config.baubles.balanceCloak.cooldown")
+		@Config.Comment("How long should Cloak of Balance's cooldown be, in ticks?")
+		@Config.RangeInt(min=5, max=1200)
+		public int balanceCloakCooldown = 200;
+
+		@Config.Name("unholyCloak.cooldown")
+		@Config.LangKey("botania.config.baubles.unholyCloak.cooldown")
+		@Config.Comment("How long should Cloak of Sin's cooldown be, in ticks?")
+		@Config.RangeInt(min=5, max=1200)
+		public int unholyCloakCooldown = 200;
+
+		@Config.Name("flightTiara.dashCooldown")
+		@Config.LangKey("botania.config.baubles.flightTiara.dashCooldown")
+		@Config.Comment("How long should Flugel Tiara's dash cooldown be, in ticks?")
+		@Config.RangeInt(min=20, max=1200)
+		public int flightTiaraDashCooldown = 80;
+
+		@Config.Name("flightTiara.flightDuration")
+		@Config.LangKey("botania.config.baubles.flightTiara.flightDuration")
+		@Config.Comment("How long should Flugel Tiara's maximum flight duration be, in ticks?")
+		@Config.RangeInt(min=200, max=6000)
+		public int flightTiaraFlightDuration = 1200;
+
+		@Config.Name("flightTiara.normalRecoveryTime")
+		@Config.LangKey("botania.config.baubles.flightTiara.normalRecoveryTime")
+		@Config.Comment("How long should it take to recover 1 tick of Flugel Tiara's flight time when not gliding?")
+		@Config.RangeInt(min=1, max=20)
+		public int flightTiaraNormalRecovery = 2;
+
+		@Config.Name("flightTiara.glideRecoveryTime")
+		@Config.LangKey("botania.config.baubles.flightTiara.glideRecoveryTime")
+		@Config.Comment("How long should it take to recover 1 tick of Flugel Tiara's flight time when gliding?")
+		@Config.RangeInt(min=1, max=20)
+		public int flightTiaraGlideRecovery = 6;
+
+		@Config.Name("magnetRing.distance")
+		@Config.LangKey("botania.config.baubles.magnetRing.distance")
+		@Config.Comment("Effect distance for Ring of Magnetization, in blocks")
+		@Config.RangeInt(min=1, max=32)
+		public int magnetRingDistance = 6;
+
+		@Config.Name("greaterMagnetRing.distance")
+		@Config.LangKey("botania.config.baubles.greaterMagnetRing.distance")
+		@Config.Comment("Effect distance for Greater Ring of Magnetization, in blocks")
+		@Config.RangeInt(min=1, max=32)
+		public int greaterMagnetRingDistance = 16;
+
+		@Config.Name("pixieRing.chance")
+		@Config.LangKey("botania.config.baubles.pixieRing.chance")
+		@Config.Comment("Chance for Great Fairy Ring to trigger whenever the player gets hit")
+		@Config.RangeDouble(min=0.0, max=1.0)
+		public float pixieRingChance = 0.25f;
+
+		@Config.Name("reachRing.distance")
+		@Config.LangKey("botania.config.baubles.reachRing.distance")
+		@Config.Comment("Bonus distance for Ring of Far Reach, in blocks")
+		@Config.RangeDouble(min=0.0, max=10.0)
+		public double reachRingDistance = 3.5;
+
+		@Config.Name("odinRing.maxHPBoost")
+		@Config.LangKey("botania.config.baubles.odinRing.maxHPBoost")
+		@Config.Comment("Maximum health boost from having Ring of Odin")
+		@Config.RangeInt(min=0, max=200)
+		public int odinRingMaxHPBoost = 20;
 	}
 
     @Mod.EventBusSubscriber(modid = LibMisc.MOD_ID)

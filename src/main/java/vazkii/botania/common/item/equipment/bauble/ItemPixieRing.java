@@ -13,6 +13,7 @@ package vazkii.botania.common.item.equipment.bauble;
 import baubles.api.BaubleType;
 import net.minecraft.item.ItemStack;
 import vazkii.botania.api.item.IPixieSpawner;
+import vazkii.botania.common.core.handler.ConfigHandler;
 import vazkii.botania.common.lib.LibItemNames;
 
 public class ItemPixieRing extends ItemBauble implements IPixieSpawner {
@@ -28,7 +29,7 @@ public class ItemPixieRing extends ItemBauble implements IPixieSpawner {
 
 	@Override
 	public float getPixieChance(ItemStack stack) {
-		return 0.25F;
+		return ConfigHandler.baubles.pixieRingChance;
 	}
 
 }
