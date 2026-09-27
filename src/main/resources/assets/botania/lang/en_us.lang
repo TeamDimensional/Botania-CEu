@@ -527,6 +527,11 @@ botania.config.generating.thermalily.delay=Thermalily Delay
 botania.config.generating.thermalily.burnTime.tooltip=Burn time of Lava Bucket in Thermalily
 botania.config.generating.thermalily.burnTime=Thermalily Burn Time
 
+botania.config.baubles.tooltip=Configure the balance of various baubles.
+botania.config.baubles=Baubles Configuration
+botania.config.baubles.waterRing.impulse.tooltip=How much impulse should Ring of Chordata grant to players in water?
+botania.config.baubles.waterRing.impulse=Ring of Chordata Impulse
+
 # VERSION CHECKING
 botania.versioning.flavour0=NANI SORE!? BOTANIA IS OUTDATED!?
 botania.versioning.flavour1=What do you mean Botania is outdated, you ignorant fool?

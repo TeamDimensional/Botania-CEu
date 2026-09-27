@@ -42,8 +42,9 @@ repositories {
 def load_thaumcraft = false
 def load_drawers = false
 def load_albedo = false
-def load_groovyscript = true
+def load_groovyscript = false
 def load_aa = false
+def load_aqua_acrobatics = false
 
 // Exactly 1 should be enabled
 def use_baubles = true
@@ -70,6 +71,7 @@ final def runtime_only_dependencies = [
         'curse.maven:actually-additions-228404:3117927': [load_aa],
         'curse.maven:bubbles-a-baubles-fork-995393:7736064': [use_bubbles],
         'curse.maven:baubles-ex-1096600:7977063': [use_baubles_ex],
+        'curse.maven:aqua-acrobatics-321792:5225456': [load_aqua_acrobatics],
 ]
 
 dependencies {

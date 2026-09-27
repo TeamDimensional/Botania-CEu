@@ -18,13 +18,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.math.Vec3d;
 import vazkii.botania.api.mana.IManaUsingItem;
 import vazkii.botania.api.mana.ManaItemHandler;
+import vazkii.botania.common.core.handler.ConfigHandler;
 import vazkii.botania.common.lib.LibItemNames;
 
 public class ItemWaterRing extends ItemBauble implements IManaUsingItem {
 
-	private static final double SPEED_MULT = 1.2;
 	private static final double MAX_SPEED = 1.3;
 
 	public ItemWaterRing() {
@@ -43,18 +44,17 @@ public class ItemWaterRing extends ItemBauble implements IManaUsingItem {
 				}
 			}
 
-			double motionX = player.motionX * SPEED_MULT;
-			double motionY = player.motionY * SPEED_MULT;
-			double motionZ = player.motionZ * SPEED_MULT;
-
+			Vec3d motionVec = new Vec3d(player.motionX, player.motionY, player.motionZ);
 			boolean flying = player instanceof EntityPlayer && ((EntityPlayer) player).capabilities.isFlying;
-
-			if(Math.abs(motionX) < MAX_SPEED && !flying)
-				player.motionX = motionX;
-			if(Math.abs(motionY) < MAX_SPEED && !flying)
-				player.motionY = motionY;
-			if(Math.abs(motionZ) < MAX_SPEED && !flying)
-				player.motionZ = motionZ;
+			if (motionVec.lengthSquared() > 1e-6 && !flying) {
+				motionVec = motionVec.add(motionVec.normalize().scale(ConfigHandler.baubles.waterRingImpulse));
+				if (motionVec.length() > MAX_SPEED) {
+					motionVec = motionVec.normalize().scale(MAX_SPEED);
+				}
+				player.motionX = motionVec.x;
+				player.motionY = motionVec.y;
+				player.motionZ = motionVec.z;
+			}
 
 			PotionEffect effect = player.getActivePotionEffect(MobEffects.NIGHT_VISION);
 			if(effect == null) {

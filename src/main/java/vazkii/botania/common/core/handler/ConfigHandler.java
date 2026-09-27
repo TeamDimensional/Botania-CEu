@@ -15,8 +15,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.IntStream;
 
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.common.config.Configuration;
@@ -424,6 +424,10 @@ public final class ConfigHandler {
 	@Config.Comment("Configure generation values for all the flowers. Note! You should not edit this unless you are very experienced with Botania, since it can change the brittle balance of the mod.")
 	public static GeneratingFlowers genFlowers = new GeneratingFlowers();
 
+	@Config.LangKey("botania.config.baubles")
+	@Config.Comment("Configure the balance of various baubles.")
+	public static Baubles baubles = new Baubles();
+
 	public static class GeneratingFlowers {
 		@Config.Name("rosaArcana.playerXp")
 		@Config.LangKey("botania.config.generating.rosaArcana.playerXp")
@@ -586,7 +590,14 @@ public final class ConfigHandler {
 		@Config.Comment("Burn time of Lava Bucket in Thermalily")
 		@Config.RangeInt(min = 100, max = 12000)
 		public int thermalilyBurnTime = 900;
+	}
 
+	public static class Baubles {
+		@Config.Name("waterRing.impulse")
+		@Config.LangKey("botania.config.baubles.waterRing.impulse")
+		@Config.Comment("How much impulse should Ring of Chordata grant to players in water?")
+		@Config.RangeDouble(min=0.005, max=0.2)
+		public double waterRingImpulse = 0.06;
 	}
 
     @Mod.EventBusSubscriber(modid = LibMisc.MOD_ID)
