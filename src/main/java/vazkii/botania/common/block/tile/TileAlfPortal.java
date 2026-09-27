@@ -14,6 +14,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -42,7 +43,6 @@ import vazkii.botania.common.item.ModItems;
 import vazkii.botania.common.lexicon.LexiconData;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Function;
 
@@ -191,6 +191,14 @@ public class TileAlfPortal extends TileMod implements ITickable {
 		return mb.makeSet();
 	}
 
+	private boolean checkSpecialCapabilities(ItemStack item) {
+		if (ConfigHandler.elfPortalExplosion && item.getItem() == Items.BREAD) {
+			explode = true;
+			return true;
+		}
+		return false;
+	}
+
 	@Override
 	public void update() {
 		IBlockState iBlockState = world.getBlockState(getPos());
@@ -224,6 +232,8 @@ public class TileAlfPortal extends TileMod implements ITickable {
 					if (item.getEntityData().hasKey(TAG_PORTAL_FLAG)) {
 						consume = false;
 					} else if (stack.getItem() instanceof ItemLexicon) {
+						consume = true;
+					} else if (checkSpecialCapabilities(stack)) {
 						consume = true;
 					} else if ((!(stack.getItem() instanceof IElvenItem) || !((IElvenItem) stack.getItem()).isElvenItem(stack))) {
 						consume = true;

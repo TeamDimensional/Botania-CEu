@@ -302,8 +302,14 @@ public final class ConfigHandler {
 
 	@Config.Name("ceu.elfPortalSize")
 	@Config.LangKey("botania.config.elfPortalSize")
-	@Config.Comment("The size of the Elf portal. 1 is a 1x1 square on the internals, 2 is a 3x3 square, etc. Defaults to 2. Warning: large numbers cause lag.")
+	@Config.Comment("The size of the Alfheim Portal. 1 is a 1x1 square on the internals, 2 is a 3x3 square, etc. Defaults to 2. Warning: large numbers cause lag.")
+	@Config.RangeInt(min = 1, max = 8)
 	public static int elfPortalSize = 2;
+
+	@Config.Name("ceu.elfPortalExplosion")
+	@Config.LangKey("botania.config.elfPortalExplosion")
+	@Config.Comment("Enable special behavior for certain items when thrown into Alfheim Portal. Disable if you hate fun.")
+	public static boolean elfPortalExplosion = true;
 
 	@Config.Name("ceu.petalApothecaryCapacity")
 	@Config.LangKey("botania.config.petalApothecaryCapacity")
