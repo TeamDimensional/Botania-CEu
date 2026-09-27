@@ -11,9 +11,6 @@
 package vazkii.botania.common.item.equipment.bauble;
 
 import baubles.api.BaublesApi;
-import baubles.api.IBauble;
-import baubles.api.cap.BaublesCapabilities;
-import baubles.api.cap.IBaublesItemHandler;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -22,9 +19,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
@@ -34,14 +28,12 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 import vazkii.botania.api.item.ICosmeticAttachable;
 import vazkii.botania.api.item.IPhantomInkable;
 import vazkii.botania.client.core.helper.RenderHelper;
 import vazkii.botania.common.core.handler.ModSounds;
 import vazkii.botania.common.core.helper.ItemNBTHelper;
 import vazkii.botania.common.core.helper.PlayerHelper;
-import vazkii.botania.common.entity.EntityDoppleganger;
 import vazkii.botania.common.item.ItemMod;
 import vazkii.botania.common.lib.LibMisc;
 
@@ -59,7 +51,7 @@ public abstract class ItemBaubleBase extends ItemMod implements ICosmeticAttacha
 	private static final String TAG_PHANTOM_INK = "phantomInk";
 	private static final String TAG_DISABLED = "baubleDisabled";
 
-	private final boolean canBeDisabled;
+	protected final boolean canBeDisabled;
 
 	public ItemBaubleBase(String name, boolean canBeDisabled) {
 		super(name);
@@ -71,7 +63,7 @@ public abstract class ItemBaubleBase extends ItemMod implements ICosmeticAttacha
 		this(name, false);
 	}
 
-    private void toggle(ItemStack stack) {
+    protected void toggle(ItemStack stack) {
         boolean value = ItemNBTHelper.getBoolean(stack, TAG_DISABLED, false);
         ItemNBTHelper.setBoolean(stack, TAG_DISABLED, !value);
     }
@@ -103,66 +95,6 @@ public abstract class ItemBaubleBase extends ItemMod implements ICosmeticAttacha
     public boolean canEquip(ItemStack canEquip, EntityLivingBase player) {
         return true;
     }
-
-	@Nonnull
-	@Override
-	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand) {
-		if (canBeDisabled && GuiScreen.isShiftKeyDown()) {
-            ItemStack stack = player.getHeldItem(hand);
-            if (!world.isRemote) {
-                toggle(stack);
-            }
-            return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
-        }
-
-		ItemStack stack = player.getHeldItem(hand);
-		if(!EntityDoppleganger.isTruePlayer(player))
-			return ActionResult.newResult(EnumActionResult.FAIL, stack);
-
-		ItemStack toEquip = stack.copy();
-		toEquip.setCount(1);
-
-		if(canEquip(toEquip, player)) {
-			if(world.isRemote)
-				return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
-
-			IBaublesItemHandler baubles = BaublesApi.getBaublesHandler(player);
-			for(int i = 0; i < baubles.getSlots(); i++) {
-				if(baubles.isItemValidForSlot(i, toEquip, player)) {
-					ItemStack stackInSlot = baubles.getStackInSlot(i);
-					IBauble baubleInSlot = stackInSlot.getCapability(BaublesCapabilities.CAPABILITY_ITEM_BAUBLE, null);
-					if(stackInSlot.isEmpty() || baubleInSlot == null || baubleInSlot.canUnequip(stackInSlot, player)) {
-						// If toEquip and stackInSlot are stacks with equal value but not identity, ItemStackHandler.setStackInSlot actually does nothing >.>
-						// Prevent it from trying to be overly smart by going through empty first
-						baubles.setStackInSlot(i, ItemStack.EMPTY);
-
-						baubles.setStackInSlot(i, toEquip);
-						((IBauble) toEquip.getItem()).onEquipped(toEquip, player);
-
-						stack.shrink(1);
-
-						PlayerHelper.grantCriterion((EntityPlayerMP) player, new ResourceLocation(LibMisc.MOD_ID, "main/bauble_wear"), "code_triggered");
-
-						if(!stackInSlot.isEmpty()) {
-							if(baubleInSlot != null) {
-								baubleInSlot.onUnequipped(stackInSlot, player);
-							}
-
-							if(stack.isEmpty()) {
-								return ActionResult.newResult(EnumActionResult.SUCCESS, stackInSlot);
-							} else {
-								ItemHandlerHelper.giveItemToPlayer(player, stackInSlot);
-							}
-						}
-
-						return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
-					}
-				}
-			}
-		}
-
-		return ActionResult.newResult(EnumActionResult.PASS, stack);
-	}
 
 	protected boolean shouldAddBaublesTooltip(ItemStack itemStack, World world) {
 		return true;

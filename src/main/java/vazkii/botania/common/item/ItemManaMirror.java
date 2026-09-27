@@ -18,7 +18,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -132,14 +131,6 @@ public class ItemManaMirror extends ItemBaubleBase implements IManaItem, ICoordB
 		}
 
 		return EnumActionResult.PASS;
-	}
-
-	@Nonnull
-	@Override
-	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand) {
-		// Remove the default bauble RMB
-		ItemStack stack = player.getHeldItem(hand);
-		return ActionResult.newResult(EnumActionResult.PASS, stack);
 	}
 
 	/*public int getMana(ItemStack stack) {
