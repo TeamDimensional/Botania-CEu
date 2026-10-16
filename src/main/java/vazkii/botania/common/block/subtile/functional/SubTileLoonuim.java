@@ -65,7 +65,10 @@ public class SubTileLoonuim extends SubTileFunctional {
 		super.onUpdate();
 
 		World world = supertile.getWorld();
-		if(!world.isRemote && redstoneSignal == 0 && ticksExisted % 100 == 0 && mana >= COST) {
+		if(!world.isRemote && ticksExisted % 100 == 0 && mana >= COST) {
+			if(refreshRedstoneSignal() > 0)
+				return;
+
 			Random rand = world.rand;
 
 			ItemStack stack;
@@ -163,6 +166,11 @@ public class SubTileLoonuim extends SubTileFunctional {
 	@Override
 	public boolean acceptsRedstone() {
 		return true;
+	}
+
+	@Override
+	protected boolean shouldPollRedstone() {
+		return false;
 	}
 
 	@Override

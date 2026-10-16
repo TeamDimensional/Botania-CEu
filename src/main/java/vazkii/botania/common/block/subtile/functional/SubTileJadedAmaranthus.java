@@ -32,10 +32,13 @@ public class SubTileJadedAmaranthus extends SubTileFunctional {
 	public void onUpdate() {
 		super.onUpdate();
 
-		if(supertile.getWorld().isRemote || redstoneSignal > 0)
+		if(supertile.getWorld().isRemote)
 			return;
 
 		if(ticksExisted % 30 == 0 && mana >= COST) {
+			if(refreshRedstoneSignal() > 0)
+				return;
+
 			BlockPos pos = new BlockPos(
 					supertile.getPos().getX() - RANGE + supertile.getWorld().rand.nextInt(RANGE * 2 + 1),
 					supertile.getPos().getY() + RANGE,
@@ -68,6 +71,11 @@ public class SubTileJadedAmaranthus extends SubTileFunctional {
 	@Override
 	public boolean acceptsRedstone() {
 		return true;
+	}
+
+	@Override
+	protected boolean shouldPollRedstone() {
+		return false;
 	}
 
 	@Override

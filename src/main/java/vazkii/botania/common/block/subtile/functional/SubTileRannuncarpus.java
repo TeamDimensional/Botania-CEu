@@ -62,10 +62,13 @@ public class SubTileRannuncarpus extends SubTileFunctional {
 	public void onUpdate() {
 		super.onUpdate();
 
-		if(supertile.getWorld().isRemote || redstoneSignal > 0)
+		if(supertile.getWorld().isRemote)
 			return;
 
 		if(ticksExisted % 10 == 0) {
+			if(refreshRedstoneSignal() > 0)
+				return;
+
 			IBlockState filter = getUnderlyingBlock();
 
 			boolean scanned = false;
@@ -159,6 +162,11 @@ public class SubTileRannuncarpus extends SubTileFunctional {
 	@Override
 	public boolean acceptsRedstone() {
 		return true;
+	}
+
+	@Override
+	protected boolean shouldPollRedstone() {
+		return false;
 	}
 
 	@SideOnly(Side.CLIENT)
