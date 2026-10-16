@@ -49,11 +49,14 @@ public class SubTileOrechid extends SubTileFunctional {
 	public void onUpdate() {
 		super.onUpdate();
 
-		if(supertile.getWorld().isRemote || redstoneSignal > 0 || !canOperate())
+		if(supertile.getWorld().isRemote || ticksExisted % getDelay() != 0 || !canOperate())
 			return;
 
 		int cost = getCost();
-		if(mana >= cost && ticksExisted % getDelay() == 0) {
+		if(mana >= cost) {
+			if(refreshRedstoneSignal() > 0)
+				return;
+
 			BlockPos coords = getCoordsToPut();
 			if(coords != null) {
 				ItemStack stack = getOreToPut();
@@ -84,7 +87,7 @@ public class SubTileOrechid extends SubTileFunctional {
 
 		for(ItemStack stack : ores) {
 			Item item = stack.getItem();
-			
+
 			if(!(item instanceof ItemBlock))
 				continue;
 
@@ -134,9 +137,10 @@ public class SubTileOrechid extends SubTileFunctional {
 	}
 
 	@Override
-	public boolean acceptsRedstone() {
-		return true;
-	}
+	public boolean acceptsRedstone() { return true;}
+
+	@Override
+	protected boolean shouldPollRedstone() { return false;}
 
 	@Override
 	public int getColor() {

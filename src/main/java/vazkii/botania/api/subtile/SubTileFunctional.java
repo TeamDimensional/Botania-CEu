@@ -44,6 +44,7 @@ public class SubTileFunctional extends SubTileEntity {
 
 	public int mana;
 
+	/** Last sampled maximum redstone strength; on-demand flowers refresh this only when needed. */
 	public int redstoneSignal = 0;
 
 	int sizeLastCheck = -1;
@@ -53,10 +54,26 @@ public class SubTileFunctional extends SubTileEntity {
 	BlockPos cachedPoolCoordinates = null;
 
 	/**
-	 * If set to true, redstoneSignal will be updated every tick.
+	 * Whether this flower responds to redstone. By default, redstoneSignal is updated every flower update.
 	 */
 	public boolean acceptsRedstone() {
 		return false;
+	}
+
+	/**
+	 * Override to defer automatic polling.
+	 * This does not change whether the flower accepts redstone.
+	 */
+	protected boolean shouldPollRedstone() {return true;}
+
+	/** Samples all six sides at the flower's current position, preserving the maximum strength. */
+	protected int refreshRedstoneSignal() {
+		redstoneSignal = 0;
+		for(EnumFacing dir : EnumFacing.VALUES) {
+			int redstoneSide = supertile.getWorld().getRedstonePower(supertile.getPos().offset(dir), dir);
+			redstoneSignal = Math.max(redstoneSignal, redstoneSide);
+		}
+		return redstoneSignal;
 	}
 
 	@Override
@@ -74,13 +91,8 @@ public class SubTileFunctional extends SubTileEntity {
 			addMana(manaToRemove);
 		}
 
-		if(acceptsRedstone()) {
-			redstoneSignal = 0;
-			for(EnumFacing dir : EnumFacing.VALUES) {
-				int redstoneSide = supertile.getWorld().getRedstonePower(supertile.getPos().offset(dir), dir);
-				redstoneSignal = Math.max(redstoneSignal, redstoneSide);
-			}
-		}
+		if(acceptsRedstone() && shouldPollRedstone())
+			refreshRedstoneSignal();
 
 		if(supertile.getWorld().isRemote) {
 			double particleChance = 1F - (double) mana / (double) getMaxMana() / 3.5F;
