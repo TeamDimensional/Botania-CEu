@@ -13,7 +13,7 @@ import static vazkii.botania.common.lib.LibBlockNames.SUBTILE_ORECHID_IGNEM;
 import static vazkii.botania.common.lib.LibBlockNames.SUBTILE_PUREDAISY;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Collections;
 
 import javax.annotation.Nonnull;
 
@@ -30,9 +30,7 @@ import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
 import vazkii.botania.api.BotaniaAPI;
 import vazkii.botania.api.recipe.RecipeBrew;
 import vazkii.botania.api.recipe.RecipeElvenTrade;
@@ -79,6 +77,9 @@ import vazkii.botania.common.item.brew.ItemBrewBase;
 @JEIPlugin
 public class JEIBotaniaPlugin implements IModPlugin {
 
+	private OrechidRecipeWrapper orechidRecipe;
+	private OrechidIgnemRecipeWrapper orechidIgnemRecipe;
+
 	@Override
 	public void registerItemSubtypes(@Nonnull ISubtypeRegistry subtypeRegistry) {
 		subtypeRegistry.registerSubtypeInterpreter(Item.getItemFromBlock(ModBlocks.specialFlower), ItemBlockSpecialFlower::getType);
@@ -91,6 +92,8 @@ public class JEIBotaniaPlugin implements IModPlugin {
 
 	@Override
 	public void registerCategories(IRecipeCategoryRegistration registry) {
+		orechidRecipe = new OrechidRecipeWrapper();
+		orechidIgnemRecipe = new OrechidIgnemRecipeWrapper();
 		registry.addRecipeCategories(
 				new BreweryRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
 				new PureDaisyRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
@@ -98,16 +101,10 @@ public class JEIBotaniaPlugin implements IModPlugin {
 				new PetalApothecaryRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
 				new ElvenTradeRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
 				new ManaPoolRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
-				new OrechidRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
-				new OrechidIgnemRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
+				new OrechidRecipeCategory<>(registry.getJeiHelpers().getGuiHelper(), orechidRecipe.getOutputCount()),
+				new OrechidIgnemRecipeCategory(registry.getJeiHelpers().getGuiHelper(), orechidIgnemRecipe.getOutputCount()),
 				new TerrestrialAgglomerationRecipeCategory(registry.getJeiHelpers().getGuiHelper())
 		);
-	}
-
-	public static boolean doesOreExist(String key) {
-		return OreDictionary.doesOreNameExist(key)
-				&& OreDictionary.getOres(key).stream()
-				.anyMatch(s -> s.getItem() instanceof ItemBlock);
 	}
 
 	@Override
@@ -133,21 +130,14 @@ public class JEIBotaniaPlugin implements IModPlugin {
 		registry.addRecipes(BotaniaAPI.manaInfusionRecipes, ManaPoolRecipeCategory.UID);
 		registry.addRecipes(BotaniaAPI.terraPlateRecipes, TerrestrialAgglomerationRecipeCategory.UID);
 
-		registry.addRecipes(
-				BotaniaAPI.oreWeights.entrySet().stream()
-						.filter(e -> doesOreExist(e.getKey()))
-						.map(OrechidRecipeWrapper::new)
-						.sorted()
-						.collect(Collectors.toList()),
-				OrechidRecipeCategory.UID);
-
-		registry.addRecipes(
-				BotaniaAPI.oreWeightsNether.entrySet().stream()
-						.filter(e -> doesOreExist(e.getKey()))
-						.map(OrechidIgnemRecipeWrapper::new)
-						.sorted()
-						.collect(Collectors.toList()),
-				OrechidIgnemRecipeCategory.UID);
+		// Register one recipe containing all outputs for each Orechid type.
+		// Skip registration if a pack script removed all outputs.
+		if(orechidRecipe.getOutputCount() > 0) {
+			registry.addRecipes(Collections.singletonList(orechidRecipe), OrechidRecipeCategory.UID);
+		}
+		if(orechidIgnemRecipe.getOutputCount() > 0) {
+			registry.addRecipes(Collections.singletonList(orechidIgnemRecipe), OrechidIgnemRecipeCategory.UID);
+		}
 
 
 		registry.addRecipeCatalyst(new ItemStack(ModBlocks.brewery), BreweryRecipeCategory.UID);
