@@ -1,5 +1,21 @@
 # Changelog
 
+## [r1.10-377] - 2026-10-18
+
+### Features
+
+- Marimorphosis now has JEI and Groovyscript support
+- Orechid and Orechid Ignem have a new JEI handler showing all the output items at once (thank you Capn!)
+- Creating Ender Air Bottles and making End Stone with them now can be automated with a Dispenser
+
+### Config
+
+- Damage dealt by Key of King's Law projectiles is now configurable
+
+### Performance
+
+- Redstone-caring flowers such as Orechid will now poll redstone less often (thank you Capn!)
+
 ## [r1.10-376] - 2026-09-27
 
 ### Tweaks
