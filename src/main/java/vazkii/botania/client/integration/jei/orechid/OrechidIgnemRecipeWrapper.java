@@ -12,21 +12,14 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import vazkii.botania.api.BotaniaAPI;
 
-import java.util.Map;
-
 public class OrechidIgnemRecipeWrapper extends OrechidRecipeWrapper {
 
-	public OrechidIgnemRecipeWrapper(Map.Entry<String, Integer> entry) {
-		super(entry);
+	public OrechidIgnemRecipeWrapper() {
+		super(BotaniaAPI.oreWeightsNether);
 	}
 
 	@Override
 	protected ItemStack getInputStack() {
 		return new ItemStack(Blocks.NETHERRACK, 64);
 	}
-
-	public Map<String, Integer> getOreWeights() {
-		return BotaniaAPI.oreWeightsNether;
-	}
-
 }
