@@ -80,7 +80,10 @@ public class SubTileMarimorphosis extends SubTileFunctional {
 			return null;
 		BlockPos target = possibleCoords.get(supertile.getWorld().rand.nextInt(possibleCoords.size()));
 		IBlockState state = supertile.getWorld().getBlockState(target);
-		return new MarimorphosisChoice(target, BotaniaAPI.getMarimorphosisRecipe(state).getOutput(supertile.getWorld().rand, supertile.getWorld().getBiome(target)));
+		IBlockState output = BotaniaAPI.getMarimorphosisRecipe(state).getOutput(supertile.getWorld().rand, supertile.getWorld().getBiome(target));
+		if (output == null)
+			return null;
+		return new MarimorphosisChoice(target, output);
 	}
 
 	@Override

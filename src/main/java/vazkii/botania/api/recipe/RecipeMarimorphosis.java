@@ -72,9 +72,11 @@ public class RecipeMarimorphosis {
         Set<Type> types = BiomeDictionary.getTypes(biome);
         int goodBiome = biomeMultiplier == 0 ? 1 : biomeMultiplier;
         int badBiome = biomeMultiplier == 0 ? 0 : 1;
+        boolean seenGoodBiome = false;
         for (int i = 0; i < TYPES.length; ++i) {
+            seenGoodBiome |= types.contains(TYPES[i]);
             items.add(new MarimorphosisItem(types.contains(TYPES[i]) ? goodBiome : badBiome, outputs[i]));
         }
-        return WeightedRandom.getRandomItem(random, items).output;
+        return seenGoodBiome ? WeightedRandom.getRandomItem(random, items).output : null;
     }
 }
