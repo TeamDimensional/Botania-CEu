@@ -22,7 +22,6 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import vazkii.botania.api.BotaniaAPI;
-import vazkii.botania.common.Botania;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -46,14 +45,7 @@ public class OrechidRecipeWrapper implements IRecipeWrapper {
 	}
 
 	protected OrechidRecipeWrapper(Map<String, Integer> oreWeights) {
-		List<ItemStack> outputs;
-		try {
-			outputs = readOutputs(oreWeights);
-		} catch (RuntimeException | LinkageError failure) {
-			Botania.LOGGER.warn("Cannot display {}: unable to read the loaded ore weights", getClass().getSimpleName(), failure);
-			outputs = Collections.emptyList();
-		}
-		outputStacks = Collections.unmodifiableList(outputs);
+		outputStacks = Collections.unmodifiableList(readOutputs(oreWeights));
 	}
 
 	protected ItemStack getInputStack() {
