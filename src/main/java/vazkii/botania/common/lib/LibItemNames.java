@@ -10,6 +10,12 @@
  */
 package vazkii.botania.common.lib;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 public final class LibItemNames {
 
 	public static final String LEXICON = "lexicon";
@@ -220,4 +226,7 @@ public final class LibItemNames {
 			"manaweaveCloth",
 			"manaPowder"
 	};
+
+	public static final Map<String, Integer> MANA_RESOURCE_NUMBERS =
+		IntStream.range(0, MANA_RESOURCE_NAMES.length).mapToObj(x -> x).collect(Collectors.toMap(x -> MANA_RESOURCE_NAMES[x], x -> x));
 }

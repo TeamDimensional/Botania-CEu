@@ -36,7 +36,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemHandlerHelper;
 import vazkii.botania.api.recipe.IElvenItem;
 import vazkii.botania.api.recipe.IFlowerComponent;
-import vazkii.botania.common.Botania;
 import vazkii.botania.common.core.handler.ConfigHandler;
 import vazkii.botania.common.entity.EntityDoppleganger;
 import vazkii.botania.common.entity.EntityEnderAirBottle;
@@ -50,7 +49,7 @@ import java.util.List;
 
 public class ItemManaResource extends ItemMod implements IFlowerComponent, IElvenItem {
 
-	final int types = 24;
+	final int types = LibItemNames.MANA_RESOURCE_NAMES.length;
 
 	public ItemManaResource() {
 		super(LibItemNames.MANA_RESOURCE);
@@ -74,7 +73,7 @@ public class ItemManaResource extends ItemMod implements IFlowerComponent, IElve
 			}
 
 			if (!world.isRemote) {
-				ItemStack enderAir = new ItemStack(this, 1, 15);
+				ItemStack enderAir = new ItemStack(this, 1, LibItemNames.MANA_RESOURCE_NUMBERS.get("enderAirBottle"));
 				ItemHandlerHelper.giveItemToPlayer(event.getEntityPlayer(), enderAir);
 				stack.shrink(1);
 
@@ -91,9 +90,12 @@ public class ItemManaResource extends ItemMod implements IFlowerComponent, IElve
 	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float par8, float par9, float par10) {
 		ItemStack stack = player.getHeldItem(hand);
 
-		if(stack.getItemDamage() == 4 || stack.getItemDamage() == 14)
-			return EntityDoppleganger.spawn(player, stack, world, pos, stack.getItemDamage() == 14) ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
-		else if(stack.getItemDamage() == 20 && net.minecraft.item.ItemDye.applyBonemeal(stack, world, pos, player, hand)) {
+		String name = LibItemNames.MANA_RESOURCE_NAMES[stack.getItemDamage()];
+		if(name.equals("terrasteel"))
+			return EntityDoppleganger.spawn(player, stack, world, pos, false) ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
+		else if(name.equals("gaiaIngot"))
+			return EntityDoppleganger.spawn(player, stack, world, pos, true) ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
+		else if(name.equals("livingRoot") && net.minecraft.item.ItemDye.applyBonemeal(stack, world, pos, player, hand)) {
 			if(!world.isRemote)
 				world.playEvent(2005, pos, 0);
 
@@ -107,7 +109,7 @@ public class ItemManaResource extends ItemMod implements IFlowerComponent, IElve
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand) {
 		ItemStack stack = player.getHeldItem(hand);
-		if(stack.getItemDamage() == 15) {
+		if(stack.getItemDamage() == LibItemNames.MANA_RESOURCE_NUMBERS.get("enderAirBottle")) {
 			if(!player.capabilities.isCreativeMode)
 				stack.shrink(1);
 
@@ -129,9 +131,10 @@ public class ItemManaResource extends ItemMod implements IFlowerComponent, IElve
 	public void getSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> stacks) {
 		if(isInCreativeTab(tab)) {
 			for(int i = 0; i < types; i++) {
-				if("UNUSED".equals(LibItemNames.MANA_RESOURCE_NAMES[i]))
+				String name = LibItemNames.MANA_RESOURCE_NAMES[i];
+				if(name.equals("UNUSED"))
 					continue;
-				if(ConfigHandler.registerGogResources || i != 20 && i != 21)
+				if(ConfigHandler.registerGogResources || (!name.equals("livingRoot") && !name.equals("pebble")))
 					stacks.add(new ItemStack(this, 1, i));
 			}
 		}
@@ -151,20 +154,22 @@ public class ItemManaResource extends ItemMod implements IFlowerComponent, IElve
 	@Override
 	public boolean isElvenItem(ItemStack stack) {
 		int meta = stack.getItemDamage();
-		return meta == 7 || meta == 8 || meta == 9;
+		String name = LibItemNames.MANA_RESOURCE_NAMES[meta];
+		return name.equals("elementium") || name.equals("dragonstone") || name.equals("pixieDust");
 	}
 
 	@Nonnull
 	@Override
 	public ItemStack getContainerItem(@Nonnull ItemStack itemStack) {
-		return itemStack.getItemDamage() == 11 ? itemStack.copy() : ItemStack.EMPTY;
+		String name = LibItemNames.MANA_RESOURCE_NAMES[itemStack.getItemDamage()];
+		return name.equals("placeholder") ? itemStack.copy() : ItemStack.EMPTY;
 	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void registerModels() {
 		for (int i = 0; i < LibItemNames.MANA_RESOURCE_NAMES.length; i++) {
-			if (!"UNUSED".equals(LibItemNames.MANA_RESOURCE_NAMES[i])) {
+			if (!LibItemNames.MANA_RESOURCE_NAMES[i].equals("UNUSED")) {
 				ModelLoader.setCustomModelResourceLocation(
 					this, i,
 					new ModelResourceLocation(LibMisc.MOD_ID + ":" + LibItemNames.MANA_RESOURCE_NAMES[i], "inventory")

@@ -13,6 +13,7 @@ package vazkii.botania.common.block;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -32,7 +33,10 @@ import vazkii.botania.common.block.corporea.BlockCorporeaIndex;
 import vazkii.botania.common.block.corporea.BlockCorporeaInterceptor;
 import vazkii.botania.common.block.corporea.BlockCorporeaRetainer;
 import vazkii.botania.common.block.decor.*;
+import vazkii.botania.common.block.dispenser.BehaviourCocoaBeans;
 import vazkii.botania.common.block.dispenser.BehaviourFelPumpkin;
+import vazkii.botania.common.block.dispenser.BehaviourGlassBottle;
+import vazkii.botania.common.block.dispenser.BehaviourManaResource;
 import vazkii.botania.common.block.dispenser.BehaviourPoolMinecart;
 import vazkii.botania.common.block.dispenser.BehaviourStick;
 import vazkii.botania.common.block.dispenser.BehaviourWand;
@@ -382,6 +386,9 @@ public final class ModBlocks {
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.obedienceStick, new BehaviourStick());
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.poolMinecart, new BehaviourPoolMinecart());
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(Item.getItemFromBlock(ModBlocks.felPumpkin), new BehaviourFelPumpkin());
+		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.manaResource, new BehaviourManaResource());
+
+		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(Items.GLASS_BOTTLE, new BehaviourGlassBottle(BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.getObject(Items.GLASS_BOTTLE)));
 
 		SeedBehaviours.init();
 	}
