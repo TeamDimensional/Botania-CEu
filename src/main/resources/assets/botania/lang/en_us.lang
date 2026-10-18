@@ -173,6 +173,23 @@ botania.nei.lexica=Lexica Botania
 botania.nei.orechid=Orechid
 botania.nei.orechidIgnem=Orechid Ignem
 botania.nei.terrestrialAgglomeration=Terrestrial Agglomeration
+botania.nei.marimorphosis=Marimorphosis
+botania.nei.marimorphosis_biome.preferred.0=Prefers Forest biomes
+botania.nei.marimorphosis_biome.preferred.1=Prefers Plains biomes
+botania.nei.marimorphosis_biome.preferred.2=Prefers Mountain biomes
+botania.nei.marimorphosis_biome.preferred.3=Prefers Mushroom biomes
+botania.nei.marimorphosis_biome.preferred.4=Prefers Swamp biomes
+botania.nei.marimorphosis_biome.preferred.5=Prefers Desert biomes
+botania.nei.marimorphosis_biome.preferred.6=Prefers Cold biomes
+botania.nei.marimorphosis_biome.preferred.7=Prefers Mesa biomes
+botania.nei.marimorphosis_biome.required.0=Must be in a Forest
+botania.nei.marimorphosis_biome.required.1=Must be in Plains biome
+botania.nei.marimorphosis_biome.required.2=Must be in a Mountain biome
+botania.nei.marimorphosis_biome.required.3=Must be in a Mushroom biome
+botania.nei.marimorphosis_biome.required.4=Must be in a Swamp biome
+botania.nei.marimorphosis_biome.required.5=Must be in a Desert biome
+botania.nei.marimorphosis_biome.required.6=Must be in a Cold biome
+botania.nei.marimorphosis_biome.required.7=Must be in a Mesa biome
 
 nei.options.keys.gui.botania_corporea_request=Corporea Request
 

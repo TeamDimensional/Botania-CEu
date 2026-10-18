@@ -19,10 +19,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 import vazkii.botania.api.subtile.SubTileEntity;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 public class RecipePureDaisy {
 
 	public static final int DEFAULT_TIME = 150;

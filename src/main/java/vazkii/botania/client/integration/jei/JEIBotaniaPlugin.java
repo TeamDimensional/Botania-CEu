@@ -8,15 +8,17 @@
  */
 package vazkii.botania.client.integration.jei;
 
+import static vazkii.botania.common.lib.LibBlockNames.SUBTILE_MARIMORPHOSIS;
 import static vazkii.botania.common.lib.LibBlockNames.SUBTILE_ORECHID;
 import static vazkii.botania.common.lib.LibBlockNames.SUBTILE_ORECHID_IGNEM;
 import static vazkii.botania.common.lib.LibBlockNames.SUBTILE_PUREDAISY;
 
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.IJeiRuntime;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
@@ -24,6 +26,7 @@ import mezz.jei.api.IRecipeRegistry;
 import mezz.jei.api.IRecipesGui;
 import mezz.jei.api.ISubtypeRegistry;
 import mezz.jei.api.JEIPlugin;
+import mezz.jei.api.ingredients.IIngredientRegistry;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
@@ -35,6 +38,7 @@ import vazkii.botania.api.BotaniaAPI;
 import vazkii.botania.api.recipe.RecipeBrew;
 import vazkii.botania.api.recipe.RecipeElvenTrade;
 import vazkii.botania.api.recipe.RecipeManaInfusion;
+import vazkii.botania.api.recipe.RecipeMarimorphosis;
 import vazkii.botania.api.recipe.RecipePetals;
 import vazkii.botania.api.recipe.RecipePureDaisy;
 import vazkii.botania.api.recipe.RecipeRuneAltar;
@@ -53,6 +57,8 @@ import vazkii.botania.client.integration.jei.elventrade.ElvenTradeRecipeCategory
 import vazkii.botania.client.integration.jei.elventrade.ElvenTradeRecipeWrapper;
 import vazkii.botania.client.integration.jei.manapool.ManaPoolRecipeCategory;
 import vazkii.botania.client.integration.jei.manapool.ManaPoolRecipeWrapper;
+import vazkii.botania.client.integration.jei.marimorphosis.MarimorphosisRecipeCategory;
+import vazkii.botania.client.integration.jei.marimorphosis.MarimorphosisRecipeWrapper;
 import vazkii.botania.client.integration.jei.orechid.OrechidIgnemRecipeCategory;
 import vazkii.botania.client.integration.jei.orechid.OrechidIgnemRecipeWrapper;
 import vazkii.botania.client.integration.jei.orechid.OrechidRecipeCategory;
@@ -77,6 +83,8 @@ import vazkii.botania.common.item.brew.ItemBrewBase;
 @JEIPlugin
 public class JEIBotaniaPlugin implements IModPlugin {
 
+	public static IIngredientRegistry ingredientRegistry;
+	private MarimorphosisRecipeCategory marimorphosisCategory;
 	private OrechidRecipeWrapper orechidRecipe;
 	private OrechidIgnemRecipeWrapper orechidIgnemRecipe;
 
@@ -94,21 +102,25 @@ public class JEIBotaniaPlugin implements IModPlugin {
 	public void registerCategories(IRecipeCategoryRegistration registry) {
 		orechidRecipe = new OrechidRecipeWrapper();
 		orechidIgnemRecipe = new OrechidIgnemRecipeWrapper();
+		IGuiHelper guiHelper = registry.getJeiHelpers().getGuiHelper();
+		marimorphosisCategory = new MarimorphosisRecipeCategory(guiHelper);
 		registry.addRecipeCategories(
-				new BreweryRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
-				new PureDaisyRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
-				new RunicAltarRecipeCategory(registry.getJeiHelpers().getGuiHelper()), // Runic must come before petals. See williewillus/Botania#172
-				new PetalApothecaryRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
-				new ElvenTradeRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
-				new ManaPoolRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
-				new OrechidRecipeCategory<>(registry.getJeiHelpers().getGuiHelper(), orechidRecipe.getOutputCount()),
-				new OrechidIgnemRecipeCategory(registry.getJeiHelpers().getGuiHelper(), orechidIgnemRecipe.getOutputCount()),
-				new TerrestrialAgglomerationRecipeCategory(registry.getJeiHelpers().getGuiHelper())
+				new BreweryRecipeCategory(guiHelper),
+				new PureDaisyRecipeCategory(guiHelper),
+				new RunicAltarRecipeCategory(guiHelper), // Runic must come before petals. See williewillus/Botania#172
+				new PetalApothecaryRecipeCategory(guiHelper),
+				new ElvenTradeRecipeCategory(guiHelper),
+				new ManaPoolRecipeCategory(guiHelper),
+				new OrechidRecipeCategory<>(guiHelper, orechidRecipe.getOutputCount()),
+				new OrechidIgnemRecipeCategory(guiHelper, orechidIgnemRecipe.getOutputCount()),
+				new TerrestrialAgglomerationRecipeCategory(guiHelper),
+				marimorphosisCategory
 		);
 	}
 
 	@Override
 	public void register(@Nonnull IModRegistry registry) {
+		ingredientRegistry = registry.getIngredientRegistry();
 		registry.handleRecipes(RecipeBrew.class, BreweryRecipeWrapper::new, BreweryRecipeCategory.UID);
 		registry.handleRecipes(RecipePureDaisy.class, PureDaisyRecipeWrapper::new, PureDaisyRecipeCategory.UID);
 		registry.handleRecipes(RecipeRuneAltar.class, RunicAltarRecipeWrapper::new, RunicAltarRecipeCategory.UID); // Runic must come before petals. See williewillus/Botania#172
@@ -116,6 +128,7 @@ public class JEIBotaniaPlugin implements IModPlugin {
 		registry.handleRecipes(RecipeElvenTrade.class, ElvenTradeRecipeWrapper::new, ElvenTradeRecipeCategory.UID);
 		registry.handleRecipes(RecipeManaInfusion.class, ManaPoolRecipeWrapper::new, ManaPoolRecipeCategory.UID);
 		registry.handleRecipes(RecipeTerrestrialAgglomeration.class, TerrestrialAgglomerationRecipeWrapper::new, TerrestrialAgglomerationRecipeCategory.UID);
+		registry.handleRecipes(RecipeMarimorphosis.class, MarimorphosisRecipeWrapper::new, MarimorphosisRecipeCategory.UID);
 		
 		registry.handleRecipes(SpecialFloatingFlowerRecipe.class, SpecialFloatingFlowerWrapper::new, VanillaRecipeCategoryUid.CRAFTING);
 		registry.handleRecipes(AncientWillRecipe.class, AncientWillRecipeWrapper::new, VanillaRecipeCategoryUid.CRAFTING);
@@ -129,6 +142,7 @@ public class JEIBotaniaPlugin implements IModPlugin {
 		registry.addRecipes(BotaniaAPI.runeAltarRecipes, RunicAltarRecipeCategory.UID);
 		registry.addRecipes(BotaniaAPI.manaInfusionRecipes, ManaPoolRecipeCategory.UID);
 		registry.addRecipes(BotaniaAPI.terraPlateRecipes, TerrestrialAgglomerationRecipeCategory.UID);
+		registry.addRecipes(BotaniaAPI.marimorphosisRecipes, MarimorphosisRecipeCategory.UID);
 
 		// Register one recipe containing all outputs for each Orechid type.
 		// Skip registration if a pack script removed all outputs.
@@ -159,6 +173,8 @@ public class JEIBotaniaPlugin implements IModPlugin {
 		registry.addRecipeCatalyst(ItemBlockSpecialFlower.ofType(new ItemStack(ModBlocks.floatingSpecialFlower), SUBTILE_ORECHID_IGNEM), OrechidIgnemRecipeCategory.UID);
 		registry.addRecipeCatalyst(ItemBlockSpecialFlower.ofType(SUBTILE_PUREDAISY), PureDaisyRecipeCategory.UID);
 		registry.addRecipeCatalyst(ItemBlockSpecialFlower.ofType(new ItemStack(ModBlocks.floatingSpecialFlower), SUBTILE_PUREDAISY), PureDaisyRecipeCategory.UID);
+		registry.addRecipeCatalyst(ItemBlockSpecialFlower.ofType(SUBTILE_MARIMORPHOSIS), MarimorphosisRecipeCategory.UID);
+		registry.addRecipeCatalyst(ItemBlockSpecialFlower.ofType(new ItemStack(ModBlocks.floatingSpecialFlower), SUBTILE_MARIMORPHOSIS), MarimorphosisRecipeCategory.UID);
 
 
 		registry.addRecipeCatalyst(new ItemStack(ModBlocks.runeAltar), RunicAltarRecipeCategory.UID);

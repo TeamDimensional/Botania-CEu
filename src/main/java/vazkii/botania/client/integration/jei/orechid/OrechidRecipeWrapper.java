@@ -22,6 +22,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import vazkii.botania.api.BotaniaAPI;
+import vazkii.botania.client.integration.jei.OrechidRecipeLayout;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class OrechidRecipeWrapper implements IRecipeWrapper {
 	private static final int PAGE_BUTTON_WIDTH = 18;
 	private final List<ItemStack> outputStacks;
 	private IGuiItemStackGroup itemStacks;
-	private OrechidRecipeCategory.Layout layout;
+	private OrechidRecipeLayout layout;
 	private int page;
 
 	public OrechidRecipeWrapper() {
@@ -138,37 +139,37 @@ public class OrechidRecipeWrapper implements IRecipeWrapper {
 			return;
 		}
 		FontRenderer font = minecraft.fontRenderer;
-		int textY = layout.footerY + (OrechidRecipeCategory.FOOTER_HEIGHT - font.FONT_HEIGHT) / 2;
+		int textY = layout.footerY + (OrechidRecipeLayout.FOOTER_HEIGHT - font.FONT_HEIGHT) / 2;
 		String pageText = (page + 1) + " / " + getPageCount();
 		font.drawString(pageText, (recipeWidth - font.getStringWidth(pageText)) / 2, textY, 0x606060);
 		font.drawString("<", (PAGE_BUTTON_WIDTH - font.getStringWidth("<")) / 2, textY,
 				page > 0 ? 0x404040 : 0xA0A0A0);
-		font.drawString(">", OrechidRecipeCategory.WIDTH - (PAGE_BUTTON_WIDTH + font.getStringWidth(">")) / 2,
+		font.drawString(">", layout.width - (PAGE_BUTTON_WIDTH + font.getStringWidth(">")) / 2,
 				textY, page + 1 < getPageCount() ? 0x404040 : 0xA0A0A0);
 	}
 
 	@Override
 	public boolean handleClick(@Nonnull Minecraft minecraft, int mouseX, int mouseY, int mouseButton) {
 		if(mouseButton != 0 || layout == null || layout.footerY < 0
-				|| mouseY < layout.footerY || mouseY >= layout.footerY + OrechidRecipeCategory.FOOTER_HEIGHT) {
+				|| mouseY < layout.footerY || mouseY >= layout.footerY + OrechidRecipeLayout.FOOTER_HEIGHT) {
 			return false;
 		}
 		if(mouseX >= 0 && mouseX < PAGE_BUTTON_WIDTH) {
 			setPage(page - 1);
 			return true;
 		}
-		if(mouseX >= OrechidRecipeCategory.WIDTH - PAGE_BUTTON_WIDTH && mouseX < OrechidRecipeCategory.WIDTH) {
+		if(mouseX >= layout.width - PAGE_BUTTON_WIDTH && mouseX < layout.width) {
 			setPage(page + 1);
 			return true;
 		}
 		return false;
 	}
 
-	void bindLayout(IGuiItemStackGroup itemStacks, OrechidRecipeCategory.Layout layout) {
+	void bindLayout(IGuiItemStackGroup itemStacks, OrechidRecipeLayout layout) {
 		this.itemStacks = itemStacks;
 		this.layout = layout;
 		page = Math.max(0, Math.min(page, getPageCount() - 1));
-		itemStacks.init(0, true, OrechidRecipeCategory.INPUT_X, 0);
+		itemStacks.init(0, true, layout.inputX, 0);
 		itemStacks.set(0, getInputStack());
 		int first = page * layout.pageSize;
 		int last = Math.min(first + layout.pageSize, outputStacks.size());
@@ -196,9 +197,9 @@ public class OrechidRecipeWrapper implements IRecipeWrapper {
 	}
 
 	private void initSlot(int index, int visibleIndex) {
-		int x = visibleIndex < 0 ? HIDDEN_POSITION : visibleIndex % OrechidRecipeCategory.COLUMNS * OrechidRecipeCategory.SLOT_SIZE;
-		int y = visibleIndex < 0 ? HIDDEN_POSITION : OrechidRecipeCategory.OUTPUT_Y
-				+ visibleIndex / OrechidRecipeCategory.COLUMNS * OrechidRecipeCategory.SLOT_SIZE;
+		int x = visibleIndex < 0 ? HIDDEN_POSITION : visibleIndex % this.layout.columns * OrechidRecipeLayout.SLOT_SIZE;
+		int y = visibleIndex < 0 ? HIDDEN_POSITION : OrechidRecipeLayout.OUTPUT_Y
+				+ visibleIndex / this.layout.columns * OrechidRecipeLayout.SLOT_SIZE;
 		// Every product keeps its own output slot, even on hidden pages, for whole-filter transfers.
 		itemStacks.init(index + 1, false, x, y);
 		itemStacks.set(index + 1, outputStacks.get(index).copy());

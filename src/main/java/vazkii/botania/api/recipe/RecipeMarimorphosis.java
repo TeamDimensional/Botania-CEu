@@ -17,11 +17,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.block.state.pattern.BlockStateMatcher;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.biome.Biome;
 
@@ -35,8 +35,9 @@ public class RecipeMarimorphosis {
 		final IBlockState output;
     }
 
-    public final BlockStateMatcher input;
-    public final IBlockState[] output;
+    public final Predicate<IBlockState> inputMatcher;
+    public final IBlockState[] inputs;
+    public final IBlockState[] outputs;
     public final int biomeMultiplier;
 
 	public static final Type[] TYPES = new Type[] {
@@ -50,16 +51,20 @@ public class RecipeMarimorphosis {
 			Type.MESA
 	};
 
-    public RecipeMarimorphosis(@Nonnull BlockStateMatcher input, @Nonnull IBlockState[] output, int biomeMultiplier) {
+    public RecipeMarimorphosis(@Nonnull Predicate<IBlockState> input, @Nonnull IBlockState[] inputs, @Nonnull IBlockState[] output, int biomeMultiplier) {
         if (output.length != TYPES.length || Arrays.stream(output).anyMatch(x -> x == null)) {
             throw new IllegalArgumentException("There should be an item for every biome, and there should not be nulls");
+        }
+        if (Arrays.stream(inputs).anyMatch(x -> x == null)) {
+            throw new IllegalArgumentException("The input blockstates should not be nulls");
         }
         if (biomeMultiplier < 0) {
             throw new IllegalArgumentException("Marimorphosis's biome multiplier should be > 1");
         }
-        this.input = input;
-        this.output = output;
+        this.inputMatcher = input;
+        this.outputs = output;
         this.biomeMultiplier = biomeMultiplier;
+        this.inputs = inputs;
     }
 
     public IBlockState getOutput(Random random, Biome biome) {
@@ -68,7 +73,7 @@ public class RecipeMarimorphosis {
         int goodBiome = biomeMultiplier == 0 ? 1 : biomeMultiplier;
         int badBiome = biomeMultiplier == 0 ? 0 : 1;
         for (int i = 0; i < TYPES.length; ++i) {
-            items.add(new MarimorphosisItem(types.contains(TYPES[i]) ? goodBiome : badBiome, output[i]));
+            items.add(new MarimorphosisItem(types.contains(TYPES[i]) ? goodBiome : badBiome, outputs[i]));
         }
         return WeightedRandom.getRandomItem(random, items).output;
     }

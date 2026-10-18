@@ -68,6 +68,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 
 public final class BotaniaAPI {
 
@@ -568,15 +569,41 @@ public final class BotaniaAPI {
 	}
 
 	/**
-	 * Registers a Marimorphosis recipe.
+	 * Registers a Marimorphosis recipe with a list of input blockstates.
 	 * @param input   The input block to be transformed.
 	 * @param outputs The preferred output blocks for each of the biomes in order: Forest, Plains, Mountain, Mushroom, Swamp, Desert, Cold, Mesa.
 	 * @param biomeMultiplier If this is 0, then the block must be in the correct biome to get that output.
 	 * If this is > 0, then this is the weight multiplier to blocks in the right biome.
 	 * @return The recipe created.
 	 */
-	public static RecipeMarimorphosis registerMarimorphosisRecipe(BlockStateMatcher input, IBlockState[] outputs, int biomeMultiplier) {
-		RecipeMarimorphosis recipe = new RecipeMarimorphosis(input, outputs, biomeMultiplier);
+	public static RecipeMarimorphosis registerMarimorphosisRecipe(IBlockState[] input, IBlockState[] outputs, int biomeMultiplier) {
+		RecipeMarimorphosis recipe = new RecipeMarimorphosis(new Predicate<IBlockState>() {
+
+			@Override
+			public boolean test(IBlockState t) {
+				for (IBlockState it : input) {
+					if (it == t) {
+						return true;
+					}
+				}
+				return false;
+			}
+			
+		}, input, outputs, biomeMultiplier);
+		marimorphosisRecipes.add(recipe);
+		return recipe;
+	}
+
+	/**
+	 * Registers a Marimorphosis recipe with an input block.
+	 * @param input   The input block to be transformed.
+	 * @param outputs The preferred output blocks for each of the biomes in order: Forest, Plains, Mountain, Mushroom, Swamp, Desert, Cold, Mesa.
+	 * @param biomeMultiplier If this is 0, then the block must be in the correct biome to get that output.
+	 * If this is > 0, then this is the weight multiplier to blocks in the right biome.
+	 * @return The recipe created.
+	 */
+	public static RecipeMarimorphosis registerMarimorphosisRecipe(Block input, IBlockState[] outputs, int biomeMultiplier) {
+		RecipeMarimorphosis recipe = new RecipeMarimorphosis(BlockStateMatcher.forBlock(input), input.getBlockState().getValidStates().toArray(new IBlockState[0]), outputs, biomeMultiplier);
 		marimorphosisRecipes.add(recipe);
 		return recipe;
 	}
@@ -588,7 +615,7 @@ public final class BotaniaAPI {
 	 */
 	public static RecipeMarimorphosis getMarimorphosisRecipe(IBlockState state) {
 		for (RecipeMarimorphosis r : marimorphosisRecipes) {
-			if (r.input.apply(state)) {
+			if (r.inputMatcher.test(state)) {
 				return r;
 			}
 		}

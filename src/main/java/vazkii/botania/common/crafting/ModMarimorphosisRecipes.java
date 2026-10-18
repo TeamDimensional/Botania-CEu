@@ -12,7 +12,6 @@ package vazkii.botania.common.crafting;
 import java.util.stream.IntStream;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.block.state.pattern.BlockStateMatcher;
 import net.minecraft.init.Blocks;
 import vazkii.botania.api.BotaniaAPI;
 import vazkii.botania.api.state.BotaniaStateProps;
@@ -24,6 +23,6 @@ public class ModMarimorphosisRecipes {
         IBlockState[] outputs = IntStream.range(0, 8)
             .mapToObj(x -> ModFluffBlocks.biomeStoneA.getDefaultState().withProperty(BotaniaStateProps.BIOMESTONE_VARIANT, BiomeStoneVariant.values()[x]))
             .toArray(IBlockState[]::new);
-        BotaniaAPI.registerMarimorphosisRecipe(BlockStateMatcher.forBlock(Blocks.STONE), outputs, 12);
+        BotaniaAPI.registerMarimorphosisRecipe(Blocks.STONE, outputs, 12);
     }
 }
