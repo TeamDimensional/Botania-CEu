@@ -1,3 +1,12 @@
+/**
+ * This class was created by <wizzerinus>. It's distributed as
+ * part of the Botania CEu Mod. Get the Source Code in github:
+ * https://github.com/TeamDimensional/Botania-CEU
+ *
+ * Botania CEu is Open Source and distributed under the
+ * Botania License: http://botaniamod.net/license.php
+ */
+
 package vazkii.botania.common.integration.groovyscript;
 
 import com.cleanroommc.groovyscript.api.documentation.annotations.Admonition;
