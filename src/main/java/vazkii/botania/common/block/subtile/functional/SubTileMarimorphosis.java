@@ -10,26 +10,18 @@
  */
 package vazkii.botania.common.block.subtile.functional;
 
-import gnu.trove.list.array.TIntArrayList;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.block.state.pattern.BlockStateMatcher;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.common.BiomeDictionary.Type;
+import vazkii.botania.api.BotaniaAPI;
 import vazkii.botania.api.lexicon.LexiconEntry;
-import vazkii.botania.api.state.BotaniaStateProps;
-import vazkii.botania.api.state.enums.BiomeStoneVariant;
 import vazkii.botania.api.subtile.RadiusDescriptor;
 import vazkii.botania.api.subtile.SubTileFunctional;
-import vazkii.botania.common.block.ModFluffBlocks;
 import vazkii.botania.common.core.handler.ConfigHandler;
 import vazkii.botania.common.lexicon.LexiconData;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class SubTileMarimorphosis extends SubTileFunctional {
 
@@ -40,16 +32,15 @@ public class SubTileMarimorphosis extends SubTileFunctional {
 	private static final int RANGE_MINI = 2;
 	private static final int RANGE_Y_MINI = 1;
 
-	private static final Type[] TYPES = new Type[] {
-			Type.FOREST,
-			Type.PLAINS,
-			Type.MOUNTAIN,
-			Type.MUSHROOM,
-			Type.SWAMP,
-			Type.SANDY,
-			Type.COLD,
-			Type.MESA
-	};
+	static class MarimorphosisChoice {
+		final BlockPos target;
+		final IBlockState blockOutput;
+
+		MarimorphosisChoice(BlockPos target, IBlockState blockOutput) {
+			this.target = target;
+			this.blockOutput = blockOutput;
+		}
+	}
 
 	@Override
 	public void onUpdate() {
@@ -61,55 +52,35 @@ public class SubTileMarimorphosis extends SubTileFunctional {
 			if(refreshRedstoneSignal() > 0)
 				return;
 
-			BlockPos coords = getCoordsToPut();
-			if(coords != null) {
-				IBlockState state = getStoneToPut(coords);
-				if(state != null) {
-					supertile.getWorld().setBlockState(coords, state);
-					if(ConfigHandler.blockBreakParticles)
-						supertile.getWorld().playEvent(2001, coords, Block.getStateId(state));
+			MarimorphosisChoice choice = makeChoice();
+			if(choice != null) {
+				supertile.getWorld().setBlockState(choice.target, choice.blockOutput);
+				if(ConfigHandler.blockBreakParticles)
+					supertile.getWorld().playEvent(2001, choice.target, Block.getStateId(choice.blockOutput));
 
-					mana -= COST;
-					sync();
-				}
+				mana -= COST;
+				sync();
 			}
 		}
 	}
 
-	public IBlockState getStoneToPut(BlockPos coords) {
-		Set<Type> types = BiomeDictionary.getTypes(supertile.getWorld().getBiome(coords));
-
-		TIntArrayList values = new TIntArrayList();
-		for(int i = 0; i < TYPES.length; i++) {
-			int times = 1;
-			if(types.contains(TYPES[i]))
-				times = 12;
-
-			for(int j = 0; j < times; j++)
-				values.add(i);
-		}
-
-		int meta = values.get(supertile.getWorld().rand.nextInt(values.size()));
-		BiomeStoneVariant variant = BiomeStoneVariant.values()[meta];
-		return ModFluffBlocks.biomeStoneA.getDefaultState().withProperty(BotaniaStateProps.BIOMESTONE_VARIANT, variant);
-	}
-
-	private BlockPos getCoordsToPut() {
+	private MarimorphosisChoice makeChoice() {
 		List<BlockPos> possibleCoords = new ArrayList<>();
 
 		int range = getRange();
 		int rangeY = getRangeY();
 
-		BlockStateMatcher matcher = BlockStateMatcher.forBlock(Blocks.STONE);
 		for(BlockPos pos : BlockPos.getAllInBox(getPos().add(-range, -rangeY, -range), getPos().add(range, rangeY, range))) {
 			IBlockState state = supertile.getWorld().getBlockState(pos);
-			if(state.getBlock().isReplaceableOreGen(state, supertile.getWorld(), pos, matcher))
+			if(BotaniaAPI.getMarimorphosisRecipe(state) != null)
 				possibleCoords.add(pos);
 		}
 
 		if(possibleCoords.isEmpty())
 			return null;
-		return possibleCoords.get(supertile.getWorld().rand.nextInt(possibleCoords.size()));
+		BlockPos target = possibleCoords.get(supertile.getWorld().rand.nextInt(possibleCoords.size()));
+		IBlockState state = supertile.getWorld().getBlockState(target);
+		return new MarimorphosisChoice(target, BotaniaAPI.getMarimorphosisRecipe(state).getOutput(supertile.getWorld().rand, supertile.getWorld().getBiome(target)));
 	}
 
 	@Override

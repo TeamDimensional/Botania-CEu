@@ -73,6 +73,7 @@ import vazkii.botania.common.crafting.ModElvenTradeRecipes;
 import vazkii.botania.common.crafting.ModManaAlchemyRecipes;
 import vazkii.botania.common.crafting.ModManaConjurationRecipes;
 import vazkii.botania.common.crafting.ModManaInfusionRecipes;
+import vazkii.botania.common.crafting.ModMarimorphosisRecipes;
 import vazkii.botania.common.crafting.ModPetalRecipes;
 import vazkii.botania.common.crafting.ModPureDaisyRecipes;
 import vazkii.botania.common.crafting.ModRuneRecipes;
@@ -174,6 +175,7 @@ public class Botania {
 		ModBrewRecipes.init();
 		ModCraftingRecipes.init();
 		ModTerrestrialAgglomerationRecipes.init();
+		ModMarimorphosisRecipes.init();
 		LexiconData.init();
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(Botania.instance, new GuiHandler());

@@ -22,6 +22,7 @@ import net.minecraft.block.BlockStainedGlass;
 import net.minecraft.block.BlockStainedGlassPane;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.pattern.BlockStateMatcher;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
@@ -45,6 +46,7 @@ import vazkii.botania.api.lexicon.LexiconEntry;
 import vazkii.botania.api.recipe.RecipeBrew;
 import vazkii.botania.api.recipe.RecipeElvenTrade;
 import vazkii.botania.api.recipe.RecipeManaInfusion;
+import vazkii.botania.api.recipe.RecipeMarimorphosis;
 import vazkii.botania.api.recipe.RecipeMiniFlower;
 import vazkii.botania.api.recipe.RecipePetals;
 import vazkii.botania.api.recipe.RecipePureDaisy;
@@ -87,6 +89,7 @@ public final class BotaniaAPI {
 	public static final List<RecipeTerrestrialAgglomeration> terraPlateRecipes = new ArrayList<>();
 	public static final List<RecipeBrew> brewRecipes = new ArrayList<>();
 	public static final List<RecipeManaInfusion> miniFlowerRecipes = new ArrayList<>();
+	public static final List<RecipeMarimorphosis> marimorphosisRecipes = new ArrayList<>();
 
 	private static final BiMap<String, Class<? extends SubTileEntity>> subTiles = HashBiMap.create();
 	private static final Map<Class<? extends SubTileEntity>, SubTileSignature> subTileSignatures = new HashMap<>();
@@ -562,6 +565,34 @@ public final class BotaniaAPI {
 	 */
 	public static RecipeTerrestrialAgglomeration registerTerraPlateRecipe(int mana, ItemStack output, Object[] inputs) {
 		return registerTerraPlateRecipe(mana, 0x0000FF, 0x00FF00, output, inputs);
+	}
+
+	/**
+	 * Registers a Marimorphosis recipe.
+	 * @param input   The input block to be transformed.
+	 * @param outputs The preferred output blocks for each of the biomes in order: Forest, Plains, Mountain, Mushroom, Swamp, Desert, Cold, Mesa.
+	 * @param biomeMultiplier If this is 0, then the block must be in the correct biome to get that output.
+	 * If this is > 0, then this is the weight multiplier to blocks in the right biome.
+	 * @return The recipe created.
+	 */
+	public static RecipeMarimorphosis registerMarimorphosisRecipe(BlockStateMatcher input, IBlockState[] outputs, int biomeMultiplier) {
+		RecipeMarimorphosis recipe = new RecipeMarimorphosis(input, outputs, biomeMultiplier);
+		marimorphosisRecipes.add(recipe);
+		return recipe;
+	}
+
+	/**
+	 * Finds a Marimorphosis recipe for a block.
+	 * @param state The input block to be transformed.
+	 * @return The recipe found for the block, or null if no such recipe exists.
+	 */
+	public static RecipeMarimorphosis getMarimorphosisRecipe(IBlockState state) {
+		for (RecipeMarimorphosis r : marimorphosisRecipes) {
+			if (r.input.apply(state)) {
+				return r;
+			}
+		}
+		return null;
 	}
 
 	/**
