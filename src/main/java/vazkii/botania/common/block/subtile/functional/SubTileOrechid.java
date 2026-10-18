@@ -137,10 +137,14 @@ public class SubTileOrechid extends SubTileFunctional {
 	}
 
 	@Override
-	public boolean acceptsRedstone() { return true;}
+	public boolean acceptsRedstone() {
+	    return true;
+	}
 
 	@Override
-	protected boolean shouldPollRedstone() { return false;}
+	protected boolean shouldPollRedstone() {
+	    return false;
+	}
 
 	@Override
 	public int getColor() {
