@@ -54,10 +54,13 @@ public class SubTileMarimorphosis extends SubTileFunctional {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		if(supertile.getWorld().isRemote || redstoneSignal > 0)
+		if(supertile.getWorld().isRemote)
 			return;
 
-		if(mana >= COST && ticksExisted % 2 == 0) {
+		if(ticksExisted % 2 == 0 && mana >= COST) {
+			if(refreshRedstoneSignal() > 0)
+				return;
+
 			BlockPos coords = getCoordsToPut();
 			if(coords != null) {
 				IBlockState state = getStoneToPut(coords);
@@ -130,6 +133,11 @@ public class SubTileMarimorphosis extends SubTileFunctional {
 	@Override
 	public boolean acceptsRedstone() {
 		return true;
+	}
+
+	@Override
+	protected boolean shouldPollRedstone() {
+		return false;
 	}
 
 	@Override
