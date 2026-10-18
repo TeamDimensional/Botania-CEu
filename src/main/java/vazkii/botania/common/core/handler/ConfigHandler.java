@@ -391,6 +391,12 @@ public final class ConfigHandler {
 	@Config.Comment("Entities immune to Heisei Dream. Syntax is modid:entity_name.")
 	public static String[] heiseiDreamImmuneEntities = {};
 
+	@Config.Name("ceu.kingsLaw.damage")
+	@Config.LangKey("botania.config.kingsLawDamage")
+	@Config.Comment("Damage dealt by Key of the King's Law's projectiles. The damage from explosions is unaffected.")
+	@Config.RangeDouble(min=0.0, max=100000.0)
+	public static float kingsLawDamage = 20.0f;
+
 	@Config.Ignore
 	public static Set<String> runicAltarCatalystsSet = new HashSet<>();
 

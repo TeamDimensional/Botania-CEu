@@ -21,10 +21,9 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.Optional;
 import vazkii.botania.common.Botania;
+import vazkii.botania.common.core.handler.ConfigHandler;
 import vazkii.botania.common.core.handler.ModSounds;
 import vazkii.botania.common.core.helper.PlayerHelper;
 import vazkii.botania.common.core.helper.Vector3;
@@ -33,9 +32,6 @@ import vazkii.botania.common.item.equipment.tool.ToolCommons;
 import vazkii.botania.common.item.relic.ItemKingKey;
 
 import javax.annotation.Nonnull;
-
-import elucent.albedo.lighting.ILightProvider;
-import elucent.albedo.lighting.Light;
 
 import java.util.List;
 
@@ -148,8 +144,8 @@ public class EntityBabylonWeapon extends EntityThrowableCopy {
 
 					if(living.hurtTime == 0) {
 						if(player != null)
-							living.attackEntityFrom(DamageSource.causePlayerDamage(player), 20);
-						else living.attackEntityFrom(DamageSource.GENERIC, 20);
+							living.attackEntityFrom(DamageSource.causePlayerDamage(player), ConfigHandler.kingsLawDamage);
+						else living.attackEntityFrom(DamageSource.GENERIC, ConfigHandler.kingsLawDamage);
 						onImpact(new RayTraceResult(living));
 						return;
 					}
