@@ -64,7 +64,9 @@ public class SubTileFunctional extends SubTileEntity {
 	 * Override to defer automatic polling.
 	 * This does not change whether the flower accepts redstone.
 	 */
-	protected boolean shouldPollRedstone() {return true;}
+	protected boolean shouldPollRedstone() {
+	    return true;
+	}
 
 	/** Samples all six sides at the flower's current position, preserving the maximum strength. */
 	protected int refreshRedstoneSignal() {
