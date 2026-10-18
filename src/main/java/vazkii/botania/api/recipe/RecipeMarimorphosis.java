@@ -15,9 +15,12 @@ import net.minecraftforge.common.BiomeDictionary.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.annotation.Nonnull;
 
@@ -50,6 +53,8 @@ public class RecipeMarimorphosis {
 			Type.COLD,
 			Type.MESA
 	};
+
+    public static final Map<Type, Integer> TYPE_INDEXES = IntStream.range(0, 8).mapToObj(x -> x).collect(Collectors.toMap(x -> TYPES[x], x -> x));
 
     public RecipeMarimorphosis(@Nonnull Predicate<IBlockState> input, @Nonnull IBlockState[] inputs, @Nonnull IBlockState[] output, int biomeMultiplier) {
         if (output.length != TYPES.length || Arrays.stream(output).anyMatch(x -> x == null)) {

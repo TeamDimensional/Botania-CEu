@@ -21,6 +21,7 @@ public class BotaniaCEuAdditions extends Botania {
     public final RunicAltarRetainedItems runeAltarRetained = new RunicAltarRetainedItems();
     public final PetalApothecaryCatalysts petalApothecaryCatalysts = new PetalApothecaryCatalysts();
     public final TerrestrialAgglomerationPlate agglomeration = new TerrestrialAgglomerationPlate();
+    public final Marimorphosis marimorphosis = new Marimorphosis();
     public final RuneAltar runeAltar = new RunicAltarOverride();
     public final BrewRecipe brewRecipe = new BreweryOverride();
     public final Apothecary apothecary = new PetalApothecaryOverride();

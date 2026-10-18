@@ -4128,6 +4128,7 @@ botania.subtitle.way=O-oooooooooo AAAAE-A-A-I-A-U-JO-oooooooooooo AAE-O-A-A-U-U-
 
 # Groovyscript integration
 groovyscript.wiki.botania_ceu.rune_altar.input.required=that `input` IIngredients cannot contain the items configured as Runic Altar's catalysts (default is Livingrock)
+
 groovyscript.wiki.botania.runic_altar_catalysts.title=Runic Altar Catalysts
 groovyscript.wiki.botania.runic_altar_catalysts.description=Allows configuring items used to activate Runic Altar recipes instead of Livingrock. Has the same effect as adding them through the config file
 groovyscript.wiki.botania.runic_altar_catalysts.add=Adds a new catalyst, making it impossible to use it in Runic Altar recipes
@@ -4136,11 +4137,13 @@ groovyscript.wiki.botania.runic_altar_retained_items.title=Runic Altar Retained 
 groovyscript.wiki.botania.runic_altar_retained_items.description=Allows configuring items that will be dropped out of the Runic Altar at the end of the recipe rather than being consumed. Has the same effect as adding them through the config file
 groovyscript.wiki.botania.runic_altar_retained_items.add=Adds a retained item
 groovyscript.wiki.botania.runic_altar_retained_items.remove=Removes a retained item
+
 groovyscript.wiki.botania.petal_apothecary_catalysts.title=Petal Apothecary Catalysts
 groovyscript.wiki.botania.petal_apothecary_catalysts.description=Allows configuring items used to finalize recipes in Petal Apothecary instead of seeds. Has the same effect as adding them through the config file
 groovyscript.wiki.botania.petal_apothecary_catalysts.add=Adds a new catalyst
 groovyscript.wiki.botania.petal_apothecary_catalysts.remove=Removes a catalyst
 groovyscript.wiki.botania.petal_apothecary_catalysts.note0=The default list of catalysts is empty, which has a special behavior of "any seeds can be used as a catalyst". This special behavior is removed when any items are added as catalysts.
+
 groovyscript.wiki.botania.terrestrial_agglomeration_plate.title=Terrestrial Agglomeration Plate
 groovyscript.wiki.botania.terrestrial_agglomeration_plate.description=Transforms any number of items put on top of a Terrestrial Agglomeration Plate into another item with a mana cost. Requires a specific layout of the 3x3 blocks underneath the plate, and can optionally transform them
 groovyscript.wiki.botania.terrestrial_agglomeration_plate.mana.value=Mana cost of the recipe. 1 mana pool is 1 million
@@ -4148,3 +4151,8 @@ groovyscript.wiki.botania.terrestrial_agglomeration_plate.blocks.value=Blocks re
 groovyscript.wiki.botania.terrestrial_agglomeration_plate.inputColor.value=Starting color of the particles displayed when executing the recipe
 groovyscript.wiki.botania.terrestrial_agglomeration_plate.outputColor.value=Ending color of the particles displayed when executing the recipe
 
+groovyscript.wiki.botania.marimorphosis.title=Marimorphosis
+groovyscript.wiki.botania.marimorphosis.description=Converts an input block into one of the 8 output blocks, depending on the biome the block is placed in
+groovyscript.wiki.botania.marimorphosis.input.value=Sets the input block of the recipe
+groovyscript.wiki.botania.marimorphosis.outputs.value=Sets the output block of the recipe. Allows putting outputs in the order (from 0-7): Forest, Desert, Mountain, Mushroom, Swamp, Desert, Cold, Mesa
+groovyscript.wiki.botania.marimorphosis.biomeMultiplier.value=Sets the biome multiplier for the recipe. If it is 0, the biome must match exactly to get that output. If it is positive, it is the weight of the output with the matching biome, and all other weights are 1
