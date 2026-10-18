@@ -1,4 +1,4 @@
-package vazkii.botania.client.integration.groovyscript;
+package vazkii.botania.common.integration.groovyscript;
 
 import com.cleanroommc.groovyscript.api.documentation.annotations.Admonition;
 import com.cleanroommc.groovyscript.api.documentation.annotations.Example;

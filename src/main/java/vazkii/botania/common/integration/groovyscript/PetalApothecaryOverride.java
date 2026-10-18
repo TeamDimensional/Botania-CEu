@@ -1,4 +1,4 @@
-package vazkii.botania.client.integration.groovyscript;
+package vazkii.botania.common.integration.groovyscript;
 
 import java.util.List;
 import java.util.Locale;

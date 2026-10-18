@@ -1,4 +1,4 @@
-package vazkii.botania.client.integration.groovyscript;
+package vazkii.botania.common.integration.groovyscript;
 
 import java.util.ArrayList;
 import java.util.Collection;
